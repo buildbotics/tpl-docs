@@ -87,6 +87,8 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 bezierPoint() accepts a single argument (BEZ) which is an object containing the following members.
 * BEZ.position - Position is a fraction between zero and one that denotes the percentage of the distance from the first point, points[0] to the last point, points[3] where the desired point is to be retrieved.
 * BEZ.points = Points is the list of four points that define the bezier curve.
+
+
 ####Results
 bezierPoint always returns 0. In addition, it sets the following member value:
 * BEZ.result - contains that point along the bezier curve described by the points in "points" at the postion described by "position".
