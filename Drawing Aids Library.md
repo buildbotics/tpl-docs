@@ -29,6 +29,6 @@ cutter.cutPath(star.path,safeHeight,depth);
 ```
 The resulting cuts, which were simulated in the [Cambotics](http://openscam.org) simulator are shown here.
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/8PointStar.png" height="300" width = "300">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/8PointStar.png" height="300" width = "400">
 
 
