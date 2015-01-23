@@ -5,15 +5,90 @@ The DrawingAids library is meant to be used with [tplang](http://tplang.org), an
 This example shows how the DrawingAids Library can be used in conjunction with the CuttingAids library to create the [g-code](http:reprap.org/wiki/G-code) needed to cut out a six-point star with rounded vertexes.
 
 ```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
 var star = {};
-star.outerRadius = 500;
+star.outerRadius = 100;
 star.numberOfPoints = 8;
-star.innerRadius = 50;
-star.radiusOfOuterVertexes = 23;
+star.innerRadius = 30;
+star.radiusOfOuterVertexes = 6;
 star.outerVertexIncrements = 10;
-star.radiusOfInnerVertexes = 5;
+star.radiusOfInnerVertexes = 3;
 star.innerVertexIncrements = 5;
 if(da.makeStar(star) != 0) print(star.error,'\n');
 cutter.cutPath(star.path,safeHeight,depth);
 ```
+The resulting cuts, which were simulated in the [Cambotics](http://openscam.org) simulator are shown here.
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/8PointStar.png" height="300" width = "400">
+
+## Style
+DrawingAids functions (except for makePointsObjects() ) all use a similar style, which is described as follows:
+* Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
+* Each function accepts a single argument which is an object.  The required properties differ among the various functions.
+* Functions return a value of 0 if successful and -1 if not successful.
+* Functions returning -1 add a property called "error" to the argument object which provides a description of the reason for failing.
+* Function returning 0 add a property that includes the result to the argument object.  The resulting property name differs among functions.
+
+One exception to these style rules is found in makePointsObjects(), which is a helper function that is provided to easily convert point lists in the form of [x,y] to {X: x,Y: y}.  See the description of makePointsObjects() for more information.
+
+## Functions
+###makePointsObjects(pointList)
+####Description
+Converts a list of points in the form of [x,y] found in pointList to the form of {X: x,Y: y} and returns the resulting list.
+####Arguments
+pointList - a list of points.  The form of pointList is [[x1,y1],[x2,y2],...,[xn,yn]] .
+####Results
+returns a list of points in the form of [{X: x1,Y: y1},{X: x2,Y: y2},...,{{X: xn,Y: yn}] .
+####Errors
+no error checking is provided in makePointsObjects().  If it fails, you should review the format of the input list.
+###bezierPoint(BEZ)
+####Description
+bezierPoint() accepts an object argument (BEZ) that is loaded with a four-point list and a position argument.  It returns the point found at "position' along the bezier curve described in the four-point list.
+####Example
+The following code returns the point that is 75% of the distance along the bezier curve described by the points in "points".
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+var bezier = {};
+bezier.points = da.makePointsObjects([[0,0],[0,50],[70,30],[40,20]]);;
+
+var path = [];
+for (var i = 0; i <= 1; i+=.1) {
+	bezier.position = i;
+	da.bezierPoint(bezier);
+	path.push(bezier.result);
+}
+cutter.cutPath(path,safeHeight,bitWidth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/BezierCurve.png" height="300" width = "400">
+
+####Arguments
+bezierPoint() accepts a single argument (BEZ) which is an object containing the following members.
+* BEZ.position - Position is a fraction between zero and one that denotes the percentage of the distance from the first point, points[0] to the last point, points[3] where the desired point is to be retrieved.
+* BEZ.points = Points is the list of four points that define the bezier curve.
+####Results
+bezierPoint always returns 0. In addition, it sets the following member value:
+* BEZ.result - contains that point along the bezier curve described by the points in "points" at the postion described by "position".
+
 
