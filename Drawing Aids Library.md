@@ -28,6 +28,7 @@ if(da.makeStar(star) != 0) print(star.error,'\n');
 cutter.cutPath(star.path,safeHeight,depth);
 ```
 The resulting cuts, which were simulated in the [Cambotics](http://openscam.org) simulator are shown here.
+
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/8PointStar.png" height="100" width = "100">
 
 
