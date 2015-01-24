@@ -179,7 +179,7 @@ S.error will contain one of the following error messages if -1 is returned.
 
 ###polyhedron(P)
 ####Description
-polyhedron accepts a single object (P) as an argument and creates a polyhedron based on the content of the object.  The contents of P will contain the number of sides to the polyhedron and the radius of the polyhedron.  Optionally, P may specify that the vertexes of the polyhedron be rounded and if so how many increments should be provided in each rounded vertex.
+polyhedron(P) accepts a single object (P) as an argument and creates a polyhedron based on the content of the object.  The contents of P will contain the number of sides to the polyhedron and the radius of the polyhedron.  Optionally, P may specify that the vertexes of the polyhedron be rounded and if so how many increments should be provided in each rounded vertex.  The resulting polyhedron is centered around the origin {x: 0,Y: 0}
 ####Example
 The following code creates a five point polyhedron with a radius of 100 and rounded vertexes.  The radius of the vertexes is 15 and each rounded vertex is broken into 10 increments.
 ```
@@ -204,8 +204,28 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/polyhedron.png" height="300" width = "400">
 ####Arguments
+polyhedron(P) accepts a single argument.  That argument (P) is an object that contains the following properties:
+* P.radius - P.radius is the distance from the center (located at {X: 0, Y: 0}) to each vertex.  Note that the vertexes are not reached if they are rounded.  Therefore, the radius will actually be greater than the distance from the origin to the farthest reaching points in the rounded polyhedron.
+* P.count - P.count specifies the number of sides (or vertexes) contained in the polyhedron.
+* P.cradius - P.cradius is an optional argument that specifies the radius of the rounded vertexes.
+* P.cincs - P.cincs is only required if P.cradius is defined and greater than 0.  P.cincs specifies the number of increments that make up each rounded corner.  Large values of cincs create smoother cuts, but generate more [g-code](http:reprap.org/wiki/G-code).
+
 ####Results
+polyhedron(P) returns 0 if successful and -1 if an error is detected.  The following properties are set in the argument object (P):
+* P.polyhedron - P.polyhedron contains the list of points that make up the resulting polyhedron.  P.polyhedron will only be defined if no error is detected during execution and 0 is returned.
+* P.error - P.error contains a string that is an error message.  P.error is only defined if an error is detected and -1 is returned.
+
 ####Error Messages
+If an error is detected, polyhedron(P) returns -1 and sets P.error to one of the following values:
+* "RADIUS\_OF\_POLYHEDRON\_NOT\_PROVIDED" - P.radius was not defined.  The radius is required to define the size of the polygon.
+* "RADIUS\_INVALID\_TYPE" - P.radius was provided, but is not a number.  A number is required to specify the radius of the polygon.
+* "COUNT\_NOT\_PROVIDED" - P.count was not defined. P.count specifies the number of sides on the polygon and is required to define the shape of the polygon.
+* "COUNT\_IS\_NOT\_A\_NUMBER" - P.count was provided but is not a number.  The number of sides of the polygon must be be a number.
+* "COUNT\_IS\_LESS\_THAN\_THREE" - P.count was provided, but is less than three.  Polygons require at least three sides.
+* "CRADIUS\_INVALID\_TYPE" - P.cradius was provided, but it is not a number.  The corner radius must be a number.
+* "CINCS\_NOT\_DEFINED" - P.cradius was provided, but P.cincs was not defined.  The number of increments to make up a corner must be specified if the corner radius is greater than zero.
+* "CINCS\_INVALID\_TYPE" - P.cincs was provided, but it is not a number.  The corner radius must be a number.
+* "CINCS\_IS\_LESS\_THAN\_2" - P.cincs is less than two.  Less than two increments would not round the polygon vertexes.
 
 
 
