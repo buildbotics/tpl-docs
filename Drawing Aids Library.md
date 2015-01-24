@@ -132,9 +132,34 @@ FourPointTensionedBSpline always returns 0 and will place the resulting curve in
 
 ### makeSpline(S)
 ####Description
-makeSpline accepts object that contains an extended list of points provided in S.points and places a spline curve that approximates the list while smoothing out corners in S.spline.  The extent to which the curve pulls away from the points given depends on the tension parameter provided in S.tnesion.  The granularity of the curves is specified in S.grain.
+makeSpline accepts an object that contains an extended list of points provided in S.points and places a spline curve that approximates the list while smoothing out corners in S.spline.  The extent to which the curve pulls away from the points given depends on the tension parameter provided in S.tnesion.  The granularity of the curves is specified in S.grain.
 ####Example
-The following code creates an extended spline based on the points provided.
+The following code creates an extended spline based on the points provided.  It then cuts the original points, translates to the right by 50 and cuts the spline.
 ```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+S = {};
+S.points = da.makePointsObjects([[15,40],[15,35],[20,30],[20,20],[17,20],										[17,0],[25,0],[25,20],[23,20],[23,30],
+				[18,35],[18,40],[15,40]]);
+S.tension = 1;
+S.grain = 10;
+da.makeSpline(S);
+cutter.cutPath(S.points,safeHeight,depth);
+translate(50,0,0);
+cutter.cutPath(S.spline,safeHeight,depth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/ExtendedSpline.png" height="300" width = "400">
+
 
 
