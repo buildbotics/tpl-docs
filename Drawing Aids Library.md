@@ -93,4 +93,40 @@ bezierPoint() accepts a single argument (BEZ) which is an object containing the 
 bezierPoint always returns 0. In addition, it sets the following member value:
 * BEZ.result - contains that point along the bezier curve described by the points in "points" at the postion described by "position".
 
+###FourPointTensionedBSpline(S)
+####Description
+FourPointTensionedBSpline accepts one object argument, S, and creates a spline curve between the the two "knots" in the point list provided in "S.points" and places the result in the "S.spline" property of the argument object, S.  The tension of the resulting spline is defined by the S.tension property and the number of points to return is defined by the S.grain property.
+####Example
+The following code creates a 10 point spline between the two knots (points 1 and 2) of the point list.
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+S = {};
+S.points = da.makePointsObjects([[0,0],[50,80],[70,200],[200,0]]);
+S.tension = 4;
+S.grain = 10;
+da.FourPointTensionedBSpline(S);
+cutter.cutPath(S.spline,safeHeight,depth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/4PointBSpline.png" height="300" width = "400">
+####Arguments
+FourPointTensionedBSpline accepts a single argument, S, that must be preloaded with the following properties:
+* S.points - contains a list of four points.  The spline will be created that represents the curve between the two knots which are the second and third point in points.
+* S.tension - S.tension describes how closely the curve will adhere to the points.  Higher values of tension tend to cause the curve to be closer to the knots.  A reasonable value for tension is 4.
+* S.grain - S.grain specifies how many points to return to approximate the curve.
+
+####Results
+FourPointTensionedBSpline always returns 0 and will place the resulting curve in the spline property of the argument object.
+* S.spline - contains that points generated.
 
