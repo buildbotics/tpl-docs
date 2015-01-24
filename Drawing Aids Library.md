@@ -177,6 +177,36 @@ makeSpline(S) returns 0 if successful and -1 if a failure is detected.
 S.error will contain one of the following error messages if -1 is returned.
 * "INSUFFICIENT\_NUMBER\_OF\_POINTS"
 
+###polyhedron(P)
+####Description
+polyhedron accepts a single object (P) as an argument and creates a polyhedron based on the content of the object.  The contents of P will contain the number of sides to the polyhedron and the radius of the polyhedron.  Optionally, P may specify that the vertexes of the polyhedron be rounded and if so how many increments should be provided in each rounded vertex.
+####Example
+The following code creates a five point polyhedron with a radius of 100 and rounded vertexes.  The radius of the vertexes is 15 and each rounded vertex is broken into 10 increments.
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+var p = {};
+p.radius = 100, p.count = 5, p.cradius = 15, p.cincs = 10;
+if(da.polyhedron(p) == -1) print(p.error,'\n');
+cutter.cutPath(p.polyhedron,safeHeight,depth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/polyhedron.png" height="300" width = "400">
+####Arguments
+####Results
+####Error Messages
+
 
 
 
