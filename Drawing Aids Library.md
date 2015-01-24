@@ -95,7 +95,7 @@ bezierPoint always returns 0. In addition, it sets the following member value:
 
 ###FourPointTensionedBSpline(S)
 ####Description
-FourPointTensionedBSpline accepts one object argument, S, and creates a spline curve between the the two "knots" in the point list provided in "S.points" and places the result in the "S.spline" property of the argument object, S.  The tension of the resulting spline is defined by the S.tension property and the number of points to return is defined by the S.grain property.
+FourPointTensionedBSpline accepts one object argument, S, and creates a spline curve between  the two "knots" in the point list provided in "S.points" and places the result in the "S.spline" property of the argument object, S.  The tension of the resulting spline is defined by the S.tension property and the number of points to return is defined by the S.grain property.
 ####Example
 The following code creates a 10 point spline between the two knots (points 1 and 2) of the point list.
 ```
@@ -123,10 +123,18 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 ####Arguments
 FourPointTensionedBSpline accepts a single argument, S, that must be preloaded with the following properties:
 * S.points - contains a list of four points.  The spline will be created that represents the curve between the two knots which are the second and third point in points.
-* S.tension - S.tension describes how closely the curve will adhere to the points.  Higher values of tension tend to cause the curve to be closer to the knots.  A reasonable value for tension is 4.
+* S.tension - S.tension describes how closely the curve will adhere to the points.  Higher values of tension tend to cause the curve to pull away from the points causing the general shape to be lost and distorted.  The image above shows the results with tension = 4.  More reasonable values of tension are between .1 and 1.5.
 * S.grain - S.grain specifies how many points to return to approximate the curve.
 
 ####Results
 FourPointTensionedBSpline always returns 0 and will place the resulting curve in the spline property of the argument object.
 * S.spline - contains that points generated.
+
+### makeSpline(S)
+####Description
+makeSpline accepts object that contains an extended list of points provided in S.points and places a spline curve that approximates the list while smoothing out corners in S.spline.  The extent to which the curve pulls away from the points given depends on the tension parameter provided in S.tnesion.  The granularity of the curves is specified in S.grain.
+####Example
+The following code creates an extended spline based on the points provided.
+```
+
 
