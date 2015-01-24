@@ -159,7 +159,26 @@ translate(50,0,0);
 cutter.cutPath(S.spline,safeHeight,depth);
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
+
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/ExtendedSpline.png" height="300" width = "400">
+
+####Arguments
+makeSpline(S) accepts a single object argument with the following properties:
+* S.points - a list of points to be used as the bases for the spline.
+* S.tension - a number that denotes how tight the curve will be.  Higher numbers make the spline "tighter" and pull farther away from the points.  Resonable values for tension are 1.5 and below.  The image above uses a tension value of 1.
+* S.grain - specifies the number of increments between each two points.  Higher numbers produce smoother curves but result in larger [g-code](http:reprap.org/wiki/G-code) files.
+
+####Results
+makeSpline(S) returns 0 if successful and -1 if a failure is detected.
+S.spline - a list of points representing the resulting spline is placed in S.spline.
+S.error - S.error is only defined if an error is encountered.  If an error occurs (i.e. -1 is returned), then S.error is a string that contains the error message.
+
+####Error Messages
+S.error will contain one of the following error messages if -1 is returned.
+* "INSUFFICIENT\_NUMBER\_OF\_POINTS"
+
+
+
 
 
 
