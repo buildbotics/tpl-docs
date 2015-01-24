@@ -119,7 +119,7 @@ da.FourPointTensionedBSpline(S);
 cutter.cutPath(S.spline,safeHeight,depth);
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/4PointBSpline.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/4PointSpline.png" height="300" width = "400">
 ####Arguments
 FourPointTensionedBSpline accepts a single argument, S, that must be preloaded with the following properties:
 * S.points - contains a list of four points.  The spline will be created that represents the curve between the two knots which are the second and third point in points.
