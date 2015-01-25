@@ -227,8 +227,52 @@ If an error is detected, polyhedron(P) returns -1 and sets P.error to one of the
 * "CINCS\_INVALID\_TYPE" - P.cincs was provided, but it is not a number.  The corner radius must be a number.
 * "CINCS\_IS\_LESS\_THAN\_2" - P.cincs is less than two.  Less than two increments would not round the polygon vertexes.
 
+###makeArc(A)
+####Description
+makeArc(A) accepts a single object as an argument and creates an arc.  The object contains the starting point for the arc, the center point of the arc, the number of increments (line segments) that make up the arc, and the angle (in radians) over which the arc will be drawn.
+####Example
+The following code creates an arc starting at {X: 0, Y: 0} around the center point at {X:0,Y:50} extending over pi radians (1/2 circle) and consisting of 100 line segments.
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
 
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
 
+var A = {};
+A.start = {X:0,Y:0}, A.center = {X:0,Y:50},A.increments = 100,A.angle = Math.PI;
+if(da.makeArc(A) == -1) print(A.error);
+else cutter.cutPath(A.arc,safeHeight,bitWidth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/arc.png" height="300" width = "400">
 
+####Arguments
+makeArc(A) accepts a single argument.  That argument (A) is an object that contains the following properties:
+* A.start - A.start is an object containing a point in the form of {X: x, Y: y}.  This is the point where the arc will begin.
+* A.center - A.center is an object containing a point in the form of {X: x, Y: y}.  The is the center point around which the arc will be drawn.
+* A.increments - A.increments specifies the number of increments that from the arc.  Each increment will ultimately be drawn as a line segment.  Larger values of A.increments will create smoother arcs, but will cause the resulting  [g-code](http:reprap.org/wiki/G-code) file to be larger.
+* A.angle - A.angle is the angle over which the resulting arc will be struck.  The value is given in radians.  Positive values cause the arc to be struck counter-clockwise and negative values cause the arc to be struck clockwise.
 
+####Results
+makeArc(A) returns 0 if no errors are detected and -1 if an error is detected.  The following properties will be set in the argument object (A) depending on whether errors are detected:
+* A.arc - If no error is detected, A.arc contains a list of points that form the resulting arc.  The points will be in the form of {X: x, Y: y}.
+* A.error - If an error is detected A.error will contain one of the error codes listed in the Error Messages section.
+
+###Error Messages
+If an error is detected, makeArc(A) returns -1 and sets A.error to one of the following values:
+* "STARTING\_POINT\_NOT\_DEFINED" - An arc could not be struck because the starting point is not defined.
+* "INVALID\_STARTING\_POINT" - An arc could not be struck because the starting point is not an object.
+* "CENTER\_POINT\_NOT\_DEFINED" - An arc could not be struck because the center point is not defined.
+* "INVALID\_CENTER\_POINT" - An arc could not be struck because the center point not an object.
+* "NUMBER\_OF\_INCREMENTS\_NOT\_DEFINED" - An arc could not be drawn because the number of increments is not defined.
+* "NUMBER\_OF\_INCREMENTS_INVALID" - An arc could not be drawn because the number of increments is not a number.
+* "ANGLE\_NOT\_DEFINED" - An arc could not be struck because the angle was not defined.
+* "INVALID\_ANGLE" - An arc could not be struck because the angle is not a number.
