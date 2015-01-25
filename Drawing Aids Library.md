@@ -428,7 +428,7 @@ If an error is detected, makeStar(S) returns -1 and throws one of the following 
 makeEllipse(E) creates an ellipse.  It accepts a single argument, which is an object containing the width, height, and number of line segments of the desired ellipse.  The resulting ellipse will be centered around the origin (X: 0,Y: 0}.
 
 ####Example
-The following code creates an ellipse that is 70 points wide, 200 points high and consist of 100 line segments.
+The following code creates an ellipse that is 70 points wide, 200 points high and consists of 100 line segments.
 ```
 units(METRIC); // units are in inches
 feed(30); // feed rate us 30 inches per minute
@@ -459,7 +459,7 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 makeEllipse(E) accepts a single argument, E.  E is an object with properties that describe the characteristics of the desired ellipse.  E has the following properties:
 * E.width - E.width is a number that specifies the width of the desired ellipse.
 * E.height - E.height is a number that specifies the height of the desired ellipse.
-* E.increments - E.increments is a number that specifies the number of line segments that will make up the desired ellipse.
+* E.increments - E.increments is a number that specifies the number of line segments that will make up the desired ellipse.  Larger values for E.increments will create smoother cuts, but will generate larger [g-code](http:reprap.org/wiki/G-code) files.
 
 ####Results
 makeEllipse(E) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, E depending on whether an error is detected.
@@ -469,7 +469,7 @@ makeEllipse(E) will return 0 if no errors are detected and -1 if an error is det
 If an error is detected, E.ellipse(E) will throw one of the following error messages.
 * "ELLIPSE\_OBJECT\_ARG\_NOT\_DEFINED" - An ellipse could not be created because no argument was provided to makeEllipse(E).
 * "ELLIPSE\_OBJECT\_INVALID\_TYPE" - An ellipse could not be created because the argument that was provided was not an object.
-* "ELLIPSE\_WIDTH\_NOT\_DEFINED" - An ellipse could not be provided because the width of the ellipse was not provided.
+* "ELLIPSE\_WIDTH\_NOT\_DEFINED" - An ellipse could not be created because the width of the ellipse was not provided.
 * "ELLIPSE\_WIDTH\_NOT\_VALID" - An ellipse could not be created because the width of the ellipse that was provided was not a number.
 * "ELLIPSE\_HEIGHT\_NOT\_DEFINED" - An ellipse could not be created because the height of the desired ellipse was not provided.
 * "ELLIPSE\_HEIGHT\_INVALID" - An ellipse could not be created because the height that was provided was not a number.
