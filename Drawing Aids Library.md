@@ -305,7 +305,7 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 makeRectangle(R) accepts a single argment, R.  R is an object with members that describe the characteristics of the desired rectangle.  R has the following properties:
 * R.width - R.width is the width of the rectangle.  It is required and must be a number.
 * R.height - R.height is the height of the rectangle.  It is required and must be a number.
-* R.cornerRadius - R.cornerRadius denote the radius of the rectangle corners.  It is optional and if not provided, it will be assumed to be zero.  R.cornerRadius must be a number.
+* R.cornerRadius - R.cornerRadius denotes the radius of the rectangle corners.  It is optional and if not provided, it will be assumed to be zero.  R.cornerRadius must be a number.
 * R.cornerIncrements - R.cornerIncrements is the number of line segments that each corner will be broken into.  It must be a number.  Larger values of R.cornerIncrements provide smoother edges but cause the resulting g-code files to be larger.
 
 ####Results
