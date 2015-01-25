@@ -279,10 +279,10 @@ If an error is detected, makeArc(A) returns -1 and sets A.error to one of the fo
 
 ###makeRectangle(R)
 ####Description
-makdRectangle(R) is creates rectangles.  The rectangles can have square or rounded corners.  It accepts a single argument, which is an object containing the desired width and height, and optionally the radius and number of increments in rounded corners.  The resulting rectangle is centered around the origin {X: 0,Y: 0}.
+makdRectangle(R) creates rectangles.  The rectangles can have square or rounded corners.  It accepts a single argument, which is an object containing the desired width and height, and optionally the radius and number of increments in rounded corners.  The resulting rectangle is centered around the origin {X: 0,Y: 0}.
 
 ####Example
-The following code creates an rectangle that with a width of 150 and a height of 100.  The rectangle has rounded corners with a corner radius of 10.  Each corner will be broken into 10 increments (10 line segments). 
+The following code creates a rectangle with a width of 150 and a height of 100.  The rectangle has rounded corners with corner radii of 10.  Each corner will be broken into 10 increments (10 line segments). 
 ```
 units(METRIC); // units are in inches
 feed(30); // feed rate us 30 inches per minute
@@ -302,25 +302,25 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/rect.png" height="300" width = "400">
 
 ####Arguments
-makeRectangle(R) accepts a single argment, R.  R is and object with members that describe the characteristics of the desired rectangle.  R has the following properties:
+makeRectangle(R) accepts a single argment, R.  R is an object with members that describe the characteristics of the desired rectangle.  R has the following properties:
 * R.width - R.width is the width of the rectangle.  It is required and must be a number.
 * R.height - R.height is the height of the rectangle.  It is required and must be a number.
 * R.cornerRadius - R.cornerRadius denote the radius of the rectangle corners.  It is optional and if not provided, it will be assumed to be zero.  R.cornerRadius must be a number.
 * R.cornerIncrements - R.cornerIncrements is the number of line segments that each corner will be broken into.  It must be a number.  Larger values of R.cornerIncrements provide smoother edges but cause the resulting g-code files to be larger.
 
 ####Results
-makeRectangle will return 0 if not errors are detected and -1 if an error is detected.  The following properies are loaded into the argument object, R depending on whether an error is detected.
-* R.rect - R.rect is a list of points in the form of {X: x, Y: y} that form the desired rectangle.  R.rect will remain unchanged (undefined if it hasn't been proviously set) if it an error is detected.  If no error is detected, R.rect will be loaded with the resulting rectangle.
+makeRectangle(R) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, R depending on whether an error is detected.
+* R.rect - R.rect is a list of points in the form of {X: x, Y: y} that form the desired rectangle.  R.rect will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, R.rect will be loaded with the resulting rectangle.
 * R.error - R.error will be loaded with an error code string if an error is detected.  The possible error code strings are described in the Error Messages section.
 
 ####Error Messages
 If an error is detected, makeRectangle(R) returns -1 and sets R.error to one of the following values:
-* "HEIGHT\_NOT\_DEFINED" - A rectangle could not be formed because the height was not defined.
+* "HEIGHT\_NOT\_DEFINED" - A rectangle could not be formed because the height was not provided.
 * "INVALID\_HEIGHT" - A rectangle could not be formed because the height was provided but was not a number.
-* "WIDTH\_NOT\_DEFINED" - A rectangle could not be formed because the width was provided wat was not a number.
+* "WIDTH\_NOT\_DEFINED" - A rectangle could not be formed because the width was not provided.
 * "INVALID\_WIDTH" - A rectangle could not be formed because the width was provided but was not a number.
 * "INVALID\_CORNER\_RADIUS" - A rectangle was not formed because the cornerRadius that was provided was not a number.
-* "CORNER\_INCREMENTS\_NOT\_DEFINED" - A rectangle was not formed because the corner radius was provided but the number of corner increments was not specified.
-* "CORNER\_INCREMENTS\_INVALID" - A rectangle was not formed because the corner radius was provided but the specified number of corner increments was not a number.
+* "CORNER\_INCREMENTS\_NOT\_DEFINED" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the number of corner increments was not specified.
+* "CORNER\_INCREMENTS\_INVALID" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the specified number of corner increments was not a number.
 
-		}
+
