@@ -264,7 +264,7 @@ makeArc(A) accepts a single argument.  That argument (A) is an object that conta
 ####Results
 makeArc(A) returns 0 if no errors are detected and -1 if an error is detected.  The following properties will be set in the argument object (A) depending on whether errors are detected:
 * A.arc - If no error is detected, A.arc contains a list of points that form the resulting arc.  The points will be in the form of {X: x, Y: y}.
-* A.error - If an error is detected A.error will contain one of the error codes listed in the Error Messages section.
+* A.error - If an error is detected A.error will contain one of the error codes listed in the Error Messages section.  A.error will be undefined if no error was detected, even if it contained a value before makeArc(A) was called.
 
 ####Error Messages
 If an error is detected, makeArc(A) returns -1 and sets A.error to one of the following values:
@@ -279,7 +279,7 @@ If an error is detected, makeArc(A) returns -1 and sets A.error to one of the fo
 
 ###makeRectangle(R)
 ####Description
-makdRectangle(R) creates rectangles.  The rectangles can have square or rounded corners.  It accepts a single argument, which is an object containing the desired width and height, and optionally the radius and number of increments in rounded corners.  The resulting rectangle is centered around the origin {X: 0,Y: 0}.
+makeRectangle(R) creates rectangles.  The rectangles can have square or rounded corners.  It accepts a single argument, which is an object containing the desired width and height, and optionally the radius and number of increments in rounded corners.  The resulting rectangle is centered around the origin {X: 0,Y: 0}.
 
 ####Example
 The following code creates a rectangle with a width of 150 and a height of 100.  The rectangle has rounded corners with corner radii of 10.  Each corner will be broken into 10 increments (10 line segments). 
@@ -302,7 +302,7 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/rect.png" height="300" width = "400">
 
 ####Arguments
-makeRectangle(R) accepts a single argment, R.  R is an object with members that describe the characteristics of the desired rectangle.  R has the following properties:
+makeRectangle(R) accepts a single argment, R.  R is an object with properties that describe the characteristics of the desired rectangle.  R has the following properties:
 * R.width - R.width is the width of the rectangle.  It is required and must be a number.
 * R.height - R.height is the height of the rectangle.  It is required and must be a number.
 * R.cornerRadius - R.cornerRadius denotes the radius of the rectangle corners.  It is optional and if not provided, it will be assumed to be zero.  R.cornerRadius must be a number.
@@ -311,7 +311,7 @@ makeRectangle(R) accepts a single argment, R.  R is an object with members that 
 ####Results
 makeRectangle(R) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, R depending on whether an error is detected.
 * R.rect - R.rect is a list of points in the form of {X: x, Y: y} that form the desired rectangle.  R.rect will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, R.rect will be loaded with the resulting rectangle.
-* R.error - R.error will be loaded with an error code string if an error is detected.  The possible error code strings are described in the Error Messages section.
+* R.error - R.error will be loaded with an error code string if an error is detected.  The possible error code strings are described in the Error Messages section.  R.error will be undefined if no error was detected, even if it contained a value before makeRectangle(R) was called.
 
 ####Error Messages
 If an error is detected, makeRectangle(R) returns -1 and sets R.error to one of the following values:
@@ -323,4 +323,70 @@ If an error is detected, makeRectangle(R) returns -1 and sets R.error to one of 
 * "CORNER\_INCREMENTS\_NOT\_DEFINED" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the number of corner increments was not specified.
 * "CORNER\_INCREMENTS\_INVALID" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the specified number of corner increments was not a number.
 
+###makeStar(S)
+####Description
+makeStar(S) creates a star.  The resulting star can have rounded inner and outer vertexes.  It accepts a single argument, which is an object containing the desired radius at the other vertexes, the radius at the inner vertexes, the number of points on the desired star, and optionally the radius and number of increments in rounded outer and inner vertexes.  The radius of the outer and inner vertexes may be different and are specified independently. The resulting star is centered around the origin {X: 0,Y: 0}.
+
+####Example
+The following code creates an 8-pointed star with an outer vertex radius of 100, an inner vertex radius of 30.  The star has rounded inner and outer vertexes.  The outer vertexes are rounded around a radius of 6 and broken into 10 increments (10 line segments).  The inner vertexes are rounded around a radius of 3 and broken into 5 increments. 
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var star = {};
+star.outerRadius = 100;
+star.numberOfPoints = 8;
+star.innerRadius = 30;
+star.radiusOfOuterVertexes = 6;
+star.outerVertexIncrements = 10;
+star.radiusOfInnerVertexes = 3;
+star.innerVertexIncrements = 5;
+if(da.makeStar(star) != 0) print(star.error,'\n');
+cutter.cutPath(star.star,safeHeight,depth);
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/star.png" height="300" width = "400">
+
+####Arguments
+makeStar(S) accepts a single argument, S.  S is an object with properties that describe the characteristics of the desired star.  S has the following properties:
+* S.outerRadius - S.outerRadius is a number that specifies the radius at the points of the outer vertexes.  Note that the actual radius of the star points will be less if the points are rounded.
+* S.numberOfPoints - S.numberOfPoints is a number that specifies the number of points in the star.
+* S.innerRadius - S.innerRadius is a number that specifies the radius at the inner vertexes.  Note that the inner radius will not be reached if the inner vertexes are rounded
+* S.radiusOfOuterVertexes - S.radiusOfOuterVertexes is optional and, if provided, is a number that specifies the radius around which the outer vertexes will be rounded.
+* S.outerVertexIncrements - S.outerVertexIncrements is only required if S.radiusOfOuterVertexes is greater than 0.  It is a number that specifies the number of line segments that the rounded outer vertexes will be broken into.  Larger values of S.outerVertexIncrements result in smoother cuts, but also generate larger [g-code](http:reprap.org/wiki/G-code) files.
+* S.radiusOfInnerVertexes - S.radiusOfInnerVertexes is optional and, if provided, is a number that specifies the radius around which the inner vertexes will be rounded.
+* S.innerVertexIncrements - S.innerVertexIncrements is only required if S.radiusOfInnerVertexes is greater than 0.  It is a number that specifies the number of line segments that the rounded inner vertexes will be broken into.  Larger values of S.innerVertexIncrements result in smoother cuts, but also generate larger [g-code](http:reprap.org/wiki/G-code) files.
+
+####Results
+makeStar(S) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, S depending on whether an error is detected.
+* S.star - S.star is a list of points in the form of {X: x, Y: y} that form the desired star.  S.star will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, S.star will be loaded with the resulting star.
+* S.error - S.error will be loaded with an error code string if an error is detected.  The possible error code strings are described in the Error Messages section.  S.error will be undefined if no error was detected, even if it contained a value before makeStar(S) was called.
+
+####Error Messages
+If an error is detected, makeStar(S) returns -1 and sets S.error to one of the following values:
+* "STAR\_OBJECT\_ARG\_NOT\_DEFINED" - A star could not be created because no argument was provided.
+* "STAR\_INVALID\_TYPE" - A star could not be created because an argument was provided but it was not an object.
+* "OUTER\_RADIUS\_ARGUMENT\_NOT\_PROVIDED" - A star could not be created because the outer radius was not provided.
+* "OUTER\_RADIUS\_ARGUMENT\_INVALID\_TYPE" - A star could not be created because the outer radius was provided but it was not a number.
+* "NUMBER\_OF\_POINTS\_NOT\_PROVIDED" - A star could not be created because the number of points was not provided. 
+* "NUMBER\_OF\_POINTS\_INVALID\_TYPE" - A star could not be created because the number of points property was not a number.
+* "NUMBER\_OF\_POINTS\_NOT\_AN\_INTEGER" - A star could not be created because the number of points specified was not an integer.
+* "INSUFFICIENT\_NUMBER\_OF\_POINTS" - A star could not be created because the number of points specified was less than three.
+* "INNER\_RADIUS\_NOT\_PROVIDED" - A star could not be created because the inner radius was not provided.
+* "INNER\_RADIUS\_INVALID\_TYPE" - A star could not be created because the inner radius that was provided was not a number.
+* "INNER\_RADIUS\_TOO\_BIG" - A star could not be created because the inner radius was greater than the outer radius.
+* "RADIUS\_OF\_OUTER\_VERTEXES\_INVALID\_TYPE" - A star could not be created because the radius of the outer vertexes that was provided was not a number.
+* "OUTER\_VERTEX\_INCREMENTS\_NOT\_DEFINED" - A star could not be created because the radius of outer vertexes was greater than 0, but the number of outer vertex increments was not provided.
+* "OUTER\_VERTEX\_INCREMENTS\_INVALID_TYPE" - A star could not be created because the radius of outer vertexes was greater than 0, but the number of outer vertex increments was not a number
+* "OUTER\_VERTEX\_INCREMENTS\_NOT\_AN\_INTEGER" - A star could not be created because the radius of outer vertexes was greater than zero, but the number of increments was not an integer.
+* "RADIUS\_OF\_INNER\_VERTEXES\_INVALID\_TYPE" - A star could not be created because the number of inner vertexes that was provided was not a number.
+* "INNER\_VERTEX\_INCREMENTS\_NOT\_DEFINED" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertex increments was not.
+* "INNER\_VERTEX\_INCREMENTS\_INVALID\_TYPE" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertexes that was specified was not a number.
+* "INNER\_VERTEX\_INCREMENTS\_NOT\_AN\_INTEGER" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertexes that was specified was not an integer.
 
