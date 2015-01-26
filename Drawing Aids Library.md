@@ -513,18 +513,18 @@ The following image shows the [Cambotics](http://openscam.org) simulation of the
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/movedemo.png" height="300" width = "400">
 
 ####Arguments
-makeBy(M) accepts a single argument, M.  M is an object with properties that include the set of paths to be moved and the amount to move them in the x and y directions.  M has the following properties:
-* M.paths - M.paths is a list of paths.  Each path in the list is a list of points of the form {X: x, Y: Y}.  The paths in M.paths will be moved by M.x points in the x direction and M.y points in the y direction.
+moveBy(M) accepts a single argument, M.  M is an object with properties that include the set of paths to be moved and the amount to move them in the x and y directions.  M has the following properties:
+* M.paths - M.paths is a list of paths.  Each path in the list is a list of points of the form {X: x, Y: y}.  The paths in M.paths will be moved by M.x points in the x direction and M.y points in the y direction.
 * M.x - M.x is an optional argument and is a number that specifies the number of points to move along the x axis.  If M.x is not defined, it is assumed to be 0;
 * M.y - M.y is an optional argument and is a number that specifies the number of points to move along the y axis.  If M.y is not defined, it is assumed to be 0;
 
 ####Results
 moveBy(M) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, M depending on whether an error is detected.
-M.newPaths - If no errors are detected, M.newPaths will contain a list of paths identical to M.paths except moved by x points along the x axis and y  points along the y axis.  M.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
+* M.newPaths - If no errors are detected, M.newPaths will contain a list of paths identical to M.paths except moved by x points along the x axis and y  points along the y axis.  M.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
 
 ####Error Messages
 If an error is detected, moveBy(M) will throw one of the following error messages:
-* "ARGUMENT\_OBJECT\_UNDEFINED" - The move could not be accomplished because no argument object was not provided.
+* "ARGUMENT\_OBJECT\_UNDEFINED" - The move could not be accomplished because no argument object was provided.
 * "ARGUMENT\_OBJECT\_INVALID" - The desired move could not be accomplished because an argument was provided but it was not an object.
 * "PATHS\_NOT\_PROVIDED" - The desired move could not be accomplished because the M.paths property was not defined.
 * "PATHS\_NOT\_LIST\_OF\_LISTS\_OF\_POINTS" - The desired move could not be accomplished because the M.paths object was not a list of paths with points in the form of {X: x, Y: y}.
