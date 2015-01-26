@@ -531,3 +531,68 @@ If an error is detected, moveBy(M) will throw one of the following error message
 * "X\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.x property that was provided was not a number.	
 * "Y\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.y property that was provided was not a number.
 
+###turnBy(T)
+####Description
+turnBy(T) turns a list of paths by a specified angle around a specified point. It accepts a single argument, which is an object containing the list of paths (T.paths) to be rotated around a specified turning point (T.tp) by a specified angle (T.angle)  .The resulting list of paths will be identical to the original list of paths except it will have been rotated around the specified point by the specified angle.
+
+####Example
+The following code creates a four-point polyhedron with rounded corners around the origin {X: 0, Y: 0} and cuts it.  It then moves the polyhedron up the y axis by 200 points and cuts it again. Finally, it turns the shape around the origin ({X: 0, Y: 0} by pi/4 radians and makes the third cut.
+
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+try {
+	var shape = {};
+	shape.radius = 100,shape.count = 4, shape.cradius = 15, shape.cincs = 10;
+	da.polyhedron(shape);
+	cutter.cutPath(shape.polyhedron,safeHeight,depth);
+	var movedShape = {}
+	movedShape.paths = [shape.polyhedron], movedShape.y = 200;
+	da.moveBy(movedShape);
+	cutter.cutPath(movedShape.newPaths[0],safeHeight,depth);
+	var turnedShape = {};
+	turnedShape.paths = movedShape.newPaths;
+	turnedShape.tp = {X: 0, Y: 0};
+	turnedShape.angle = Math.PI/4;
+	da.turnBy(turnedShape);
+	cutter.cutPath(turnedShape.newPaths[0],safeHeight,depth);
+} catch (err) {
+	print(err,'\n');
+};
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/turndemo.png" height="300" width = "400">
+
+####Arguments
+turnBy(T) accepts a single argument, T.  T is an object with properties that include the set of paths to be turned, the point to be used as the pivot for turning, and the angle over which to turn.  T has the following properties:
+* T.paths - T.paths is a list of paths.  Each path in the list is a list of points of the form {X: x, Y: y}.   These paths will be turned about the turning point (T.tp) over an angle given by T.angle.
+* T.tp - T.tp is the point to be used as the pivot for turning T.paths.  T.tp must be a point object in the from of {X: x, Y: y}.
+* T.angle - T.angle is the angle over which the paths will be turned.  T.angle must be a number and its value is in radians.  Positive values of T.angle cause T.paths to turn counter-clockwise around T.tp.
+
+####Results
+turnBy(T) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, T depending on whether an error is detected.
+* T.newPaths - If no errors are detected, T.newPaths will contain a list of paths identical to T.paths except turned by T.angle around the pivot point T.tp.  T.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
+
+####Error Messages
+If an error is detected, turnBy(T) will throw one of the following error messages:
+* "ARGUMENT\_NOT\_PROVIDED" - The turn could not be accomplished because no argument was provided.
+* "ARGUMENT\_INVALID" - The turn could not be accomplished because the argument that was provided was not an object.
+* "LIST\_OF\_PATHS\_NOT\_PROVIDED" - The turn could not be accomplished because the list of paths to turn was not provided.
+* "LIST\_OF\_PATHS\_INVALID" - The turn could not be accomplished because the list of paths that was provided was not in the form of a list of paths consisting of points in the form {X: x,Y: y}.
+* "TURNING\_POINT\_NOT\_PROVIDED" - The turn could not be accomplished because the turning point was not provided. 
+* "TURNING\_POINT\_INVALID" - The turn could not be accomplished because the turning point that was provided was not in the form of {X: x, Y: y}.
+* "TURNING\_ANGLE\_NOT\_PROVIDED" - The turn could not be accomplished because the angle over which to turn was not provided.
+* "TURNING\_ANGLE\_INVALID" - The turn could not be accomplished because the angle that was provided was not a number.
+
+
