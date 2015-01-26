@@ -466,7 +466,7 @@ makeEllipse(E) will return 0 if no errors are detected and -1 if an error is det
 * E.ellipse - E.ellipse is a list of points in the form of {X: x, Y: y} that form the desired ellipse.  E.ellipse will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, E.ellipse will be loaded with the resulting ellipse.
 
 ####Error Messages
-If an error is detected, E.ellipse(E) will throw one of the following error messages.
+If an error is detected, makeEllipse(E) will throw one of the following error messages.
 * "ELLIPSE\_OBJECT\_ARG\_NOT\_DEFINED" - An ellipse could not be created because no argument was provided to makeEllipse(E).
 * "ELLIPSE\_OBJECT\_INVALID\_TYPE" - An ellipse could not be created because the argument that was provided was not an object.
 * "ELLIPSE\_WIDTH\_NOT\_DEFINED" - An ellipse could not be created because the width of the ellipse was not provided.
@@ -476,4 +476,58 @@ If an error is detected, E.ellipse(E) will throw one of the following error mess
 * "ELLIPSE\_INCREMENTS\_NOT\_DEFINED" - An ellipse could not be created because the desired number of increments that would make up the resulting ellipse was not provided.
 * "ELLIPSE\_INCREMENTS\_NOT\_VALID" - An ellipse could not be created because the desired number of increments that would make up the resulting ellipse was not a number.
 
+###moveBy(M)
+####Description
+moveBy(M) moves an existing list of paths to a new location.  It accepts a single argument, which is an object containing the list of paths (M.paths) to be moved and the x and y coordinates to move by.  The new list of paths will be identical to the original list of paths except it will be transposed by M.x points along the x-axis and M.y points along the y axis.
+
+####Example
+The following code creates and cuts a five-point, rounded polygon, then moves it 100 points along the x axis and 100 points along the y axis and cuts it again.
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+var P = {};
+P.radius = 100, P.count = 5, P.cradius = 15, P.cincs = 10;
+try {
+	da.polyhedron(P);
+	cutter.cutPath(P.polyhedron,safeHeight,depth);
+	var M = {};
+	M.paths = [P.polyhedron], M.x = 100, M.y = 100;
+	da.moveBy(M);
+	cutter.cutPath(M.newPaths[0],safeHeight,depth);
+} catch (err) { 
+	print(err,'\n');
+};
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/movedemo.png" height="300" width = "400">
+
+####Arguments
+makeBy(M) accepts a single argument, M.  M is an object with properties that include the set of paths to be moved and the amount to move them in the x and y directions.  M has the following properties:
+* M.paths - M.paths is a list of paths.  Each path in the list is a list of points of the form {X: x, Y: Y}.  The paths in M.paths will be moved by M.x points in the x direction and M.y points in the y direction.
+* M.x - M.x is an optional argument and is a number that specifies the number of points to move along the x axis.  If M.x is not defined, it is assumed to be 0;
+* M.y - M.y is an optional argument and is a number that specifies the number of points to move along the y axis.  If M.y is not defined, it is assumed to be 0;
+
+####Results
+moveBy(M) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, M depending on whether an error is detected.
+M.newPaths - If no errors are detected, M.newPaths will contain a list of paths identical to M.paths except moved by x points along the x axis and y  points along the y axis.  M.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
+
+####Error Messages
+If an error is detected, moveBy(M) will throw one of the following error messages:
+* "ARGUMENT\_OBJECT\_UNDEFINED" - The move could not be accomplished because no argument object was not provided.
+* "ARGUMENT\_OBJECT\_INVALID" - The desired move could not be accomplished because an argument was provided but it was not an object.
+* "PATHS\_NOT\_PROVIDED" - The desired move could not be accomplished because the M.paths property was not defined.
+* "PATHS\_NOT\_LIST\_OF\_LISTS\_OF\_POINTS" - The desired move could not be accomplished because the M.paths object was not a list of paths with points in the form of {X: x, Y: y}.
+* "X\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.x property that was provided was not a number.	
+* "Y\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.y property that was provided was not a number.
 
