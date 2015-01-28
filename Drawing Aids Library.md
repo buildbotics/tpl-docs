@@ -34,7 +34,7 @@ try {
 ```
 The resulting cuts, which were simulated in the [Cambotics](http://openscam.org) simulator are shown here.
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/8PointStar.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/8PointStar.png" height="300" width = "400">
 
 ## Style
 DrawingAids functions (except for makePointsObjects() ) all use a similar style, which is described as follows:
