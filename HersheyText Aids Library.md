@@ -28,11 +28,11 @@ var ha = require('HersheyTextAids');
 var cutter = require('CuttingAids');
 
 var line = {};
-line.text = 				"Hello World!";
-line.spacing = 			-2;
-line.scale = 				5;
-line.font = 				"Script 1-stroke";
-line.spaceSize = 		5;
+line.text =       "Hello World!";
+line.spacing =    -2;
+line.scale =      5;
+line.font =       "Script 1-stroke";
+line.spaceSize =  5;
 ha.getLineOfText(line);
 for (var i = 0; i < line.paths.length; i++)
 	cutter.cutPath(line.paths[i],safeHeight,depth);
@@ -52,9 +52,9 @@ getLineOfText(TC) accepts a single argument TC, which is an object containing th
 
 ####Results
 getLineOfText(TC) returns 0 if no errors are detected and -1 if an error is detected.  The following properties will be set in the argument object (TC) depending on whether errors are detected:
-TC.paths - If no error is detected, TC.paths will contain a list of paths.  Each path within the list will be a list of point objects in the form of {X: x Y: y}.  If an error is detected, TC.paths remains unchanged.
-TC.width - If no error is detected, TC.width will contain a number that is the overall width of the list of paths that is returned in TC.paths.
-TC.height - If no error is detected, TC.height will contain a number that is the overall height of the list of paths that is returned in TC.paths.
+* TC.paths - If no error is detected, TC.paths will contain a list of paths.  Each path within the list will be a list of point objects in the form of {X: x Y: y}.  If an error is detected, TC.paths remains unchanged.
+* TC.width - If no error is detected, TC.width will contain a number that is the overall width of the list of paths that is returned in TC.paths.
+* TC.height - If no error is detected, TC.height will contain a number that is the overall height of the list of paths that is returned in TC.paths.
 
 ####Error Messages
 If an error is detected, getLineOfText(TC) returns -1 and throws one of the following values:
