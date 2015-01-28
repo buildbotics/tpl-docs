@@ -87,7 +87,7 @@ for (var i = 0; i <= 1; i+=.1) {
 cutter.cutPath(path,safeHeight,bitWidth);
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/BezierCurve.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/BezierCurve.png" height="300" width = "400">
 
 ####Arguments
 bezierPoint(BEZ) accepts a single argument (BEZ) which is an object containing the following members.
@@ -128,7 +128,7 @@ da.FourPointTensionedBSpline(S);
 cutter.cutPath(S.spline,safeHeight,depth);
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/4PointSpline.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/4PointSpline.png" height="300" width = "400">
 ####Arguments
 FourPointTensionedBSpline(S) accepts a single argument, S, that must be preloaded with the following properties:
 * S.points - contains a list of four points.  The spline will be created that represents the curve between the two knots which are the second and third points in points.
@@ -177,7 +177,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/ExtendedSpline.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/ExtendedSpline.png" height="300" width = "400">
 
 ####Arguments
 makeSpline(S) accepts a single object argument with the following properties:
@@ -222,7 +222,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/polyhedron.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/polyhedron.png" height="300" width = "400">
 ####Arguments
 polyhedron(P) accepts a single argument.  That argument (P) is an object that contains the following properties:
 * P.radius - P.radius is the distance from the center (located at {X: 0, Y: 0}) to each vertex.  Note that the vertexes are not reached if they are rounded.  Therefore, the radius will actually be greater than the distance from the origin to the farthest reaching points in the rounded polyhedron.
@@ -273,7 +273,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/arc.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/arc.png" height="300" width = "400">
 
 ####Arguments
 makeArc(A) accepts a single argument.  That argument (A) is an object that contains the following properties:
@@ -325,7 +325,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/rect.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/rect.png" height="300" width = "400">
 
 ####Arguments
 makeRectangle(R) accepts a single argment, R.  R is an object with properties that describe the characteristics of the desired rectangle.  R has the following properties:
@@ -384,7 +384,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/star.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/star.png" height="300" width = "400">
 
 ####Arguments
 makeStar(S) accepts a single argument, S.  S is an object with properties that describe the characteristics of the desired star.  S has the following properties:
@@ -453,7 +453,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/ellipse.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/ellipse.png" height="300" width = "400">
 
 ####Arguments
 makeEllipse(E) accepts a single argument, E.  E is an object with properties that describe the characteristics of the desired ellipse.  E has the following properties:
@@ -510,7 +510,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/movedemo.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/movedemo.png" height="300" width = "400">
 
 ####Arguments
 moveBy(M) accepts a single argument, M.  M is an object with properties that include the set of paths to be moved and the amount to move them in the x and y directions.  M has the following properties:
@@ -572,7 +572,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/turndemo.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/turndemo.png" height="300" width = "400">
 
 ####Arguments
 turnBy(T) accepts a single argument, T.  T is an object with properties that include the set of paths to be turned, the point to be used as the pivot for turning, and the angle over which to turn.  T has the following properties:
@@ -650,7 +650,7 @@ try {
 ```
 The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/drawalong.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/drawalong.png" height="300" width = "400">
 
 ####Arguments
 drawAlong(DA) accepts a single argument, DA.  DA is an object with properties that include the list of things to be draw along the path, the path on which the things will be drawn and various controls that determine how the things will be draw,.  DA has the following properties:
