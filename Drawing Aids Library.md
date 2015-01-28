@@ -595,4 +595,96 @@ If an error is detected, turnBy(T) will throw one of the following error message
 * "TURNING\_ANGLE\_NOT\_PROVIDED" - The turn could not be accomplished because the angle over which to turn was not provided.
 * "TURNING\_ANGLE\_INVALID" - The turn could not be accomplished because the angle that was provided was not a number.
 
+###drawAlong(DA)
+####Description
+drawAlong(DA) allows drawing a series of things along a specific path.  drawAlong accepts a single argument (DA), which is an object with several properties including the list of things to draw, the path to draw the things along, how many times to repeat drawing the things, whether the things should turn to be inline with the specified path or remain upright, whether the things should be progressively zoomed along the path and whether to fit the path to the things, fit the things to the path,or just let the things continue to be drawn until the path runs out.  If successful, drawAlong will return 0 and load the new set of things only located and oriented along the path into the DA object.
+
+####Example
+The following code creates a four point polyhedron, a rectangle with rounded corners, and a half-circle arc.  It then creates an object called DA\_ctrls and adds a list of things to the DA\_ctrls.thingsToDraw property.  Those things include three copies of the 4-point polyhedron previously created and the rectangle.  It sets the spacing between things to be 20, requests that the list of things be repeated three times, directs that the path will be adjusted to fit the size of the list of things (including spaces), sets the path to follow to be the arc that was previously created, tells it to zoom each thing by .9 times the zooming of the previous thing, and tells it to orient the things so that they will turn to be inline with the path at the point along the path where they will fall.
+
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+try {
+	var poly = {};
+	poly.radius = 100,poly.count = 4,poly.cradius = 0,poly.cincs = 0;
+	da.polyhedron(poly);
+	var rect = {};
+	rect.width = 100, rect.height = 30, rect.cornerRadius = 10, rect.cornerIncrements = 10;
+	da.makeRectangle(rect);
+	var arc = {};
+	arc.start = {X: 0,Y:0}, arc.center = {X: 0, Y: 100};
+	arc.increments = 100, arc.angle = Math.PI;
+	da.makeArc(arc);
+
+	var DA_ctrls = {};
+	DA_ctrls.thingsToDraw = [[poly.polyhedron],[poly.polyhedron],[poly.polyhedron],[rect.rect]];
+	DA_ctrls.spaceBetweenThings = 20;
+	DA_ctrls.repeat = 3;
+	DA_ctrls.fit = "FITPATHTOTHINGS";
+	DA_ctrls.pathToDrawAlong = arc.arc;
+	DA_ctrls.progressiveZoom =.9;
+	DA_ctrls.orientation = "INLINE";
+	da.drawAlong(DA_ctrls);
+
+	for(var i=0; i<DA_ctrls.newThings.length;i++) {
+		for(var j = 0;j < DA_ctrls.newThings[i].length;j++) {
+			for(var k = 0; k < DA_ctrls.newThings[i][j].length;k++) {
+				cutter.cutPath(DA_ctrls.newThings[i][j][k],safeHeight,depth);
+			};
+		};
+	};
+} catch (err) {
+	print(err,'\n');
+};
+```
+The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/drawalong.png" height="300" width = "400">
+
+####Arguments
+drawAlong(DA) accepts a single argument, DA.  DA is an object with properties that include the list of things to be draw along the path, the path on which the things will be drawn and various controls that determine how the things will be draw,.  DA has the following properties:
+* DA.thingsToDaw - DA.thingsToDraw is a list of lists of paths.  The paths are lists of points in the form of {X: x, Y: y}.  A list of paths is referred to as a thing.  Things can contain several paths and all paths in a thing will ultimately be drawn in the same place with the same orientation.  Da.thingsToDraw is a list of things and will be in the form of [[patha1,patha22,...,pathan],[pathb1, pathb, pathb2,...,pathbn],...,[pathn1,pathn2,...,[pathnn]].  Each thing may have any number of paths and DA.thingsToDraw can contain any number of things.
+* DA.repeat - DA.repeat is a number that specifies how many times to repeat drawing the list of things in DA.thingsToDraw.  DA.repeat is optional and if not provided it will be assumed to be 1.
+* DA.progressiveZoom - DA.progressiveZoom is a number that specifies how much to zoom each successive object that will be drawn along DA.pathToDrawAlong.  Zooming is progressive.  For instance, DA.progressiveZoom is set to .5, the first thing drawn will be full size, the second thing drawn will be .5 times its original size, and the third thing drawn will be .25 times its original size.  Note the spacing is also zoomed by the same amount as the thing drawn immediately before the spaces.
+* DA.spaceBetweenThings - DA.spaceBetweenThings is a number that specifies how many units to place between each successive thing.
+* DA.fit - DA.fit contains a string that specifies how to fit the path to draw along and the list of things to draw with one another.  DA. fit has three possible values.  DA.fit is optional and if not set, it will be assumed to be "NONE". The possible values are:
+  * "FITPATHTOTHINGS" - Setting DA.fit to "FITPATHTOTHINGS" will cause the path provided in DA.pathToDrawAlong to be zoomed to the size of the list of things to draw provided in DA.thingsToDraw property
+  * "FITTHINGSTOPATH" - Setting DA.fit to "FITTHINGSTOPATH" will cause the list of things to be zoomed to a value that matches the length of the path to draw along found in DA.pathToDrawAlong.
+  * "NONE" - Setting DA.fit to "NONE"   causes the list of things to be drawn along the path without regard to the size of the path to draw along.  If the path runs out before the list of things (including repeats) is completed, it simply stops drawing.  If the list of things (including repeats) runs out before the end of the path is reached, is stops drawing.  "NONE" is the default value.
+* DA.orientation - DA.orientation is a string that specifies how the things will be oriented as they are drawn along the path.  DA.orientation is optional and if not provided will be assumed to be "INLINE".  The possible values for DA.orientation are:
+  * "INLINE" - Setting DA.orientation to "INLINE" cause each thing to be oriented such that it is parallel to the direction of the path to draw along at the point where it will be drawn.  "INLINE" is the default value for DA.orientation.
+  * "UPRIGHT" - Setting DA.orientation to "UPRIGHT" causes each thing to retain it's original orientation as it is drawn along the path to draw along.
+* DA.pathToDrawAlong - DA.pathToDrawAlong is a list of points in the form of {X: x, Y: y} and is the path upon which the things in DA.thingsToDraw will be drawn along.  DA.pathToDrawAlong is optional, and if not provided will be assumed to be a horizontal line that starts at the origin {X: 0,Y: 0} and is the same length as the length of DA.thingsToDraw with zooming and spaces applies.
+
+####Results
+drawAlong(DA) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, DA depending on whether an error is detected.
+* DA.newThings - If successful, drawAlong(DA) will return 0 and set DA.newThings to the list of things that result from executing drawAlong(DA).  DA.newThings will be similar, and in the same form as the DA.thingsToDraw.  If will differ by having the things drawn along DA.pathToDrawAlong and oriented, zoomed, and repeated as specified in the other controls provided in the DA object.
+ 
+####Error Messages
+If drawAlong(DA) detects and error it return -1 and throw one of the following error messages:
+* "NO\_ARGUMENT" - drawAlong(DA) could not run because not argument (DA) was provided.
+* "INVALID\_ARGUMENT" - drawAlong(DA) could not run because the argument that was provided was not an object.	
+* "THINGS\_TO\_DRAW\_NOT\_DEFINED" - drawAlong(DA) could not be exectuted because the DA.thingsToDraw property was not provided.
+* "THINGS\_TO\_DRAW\_WRONG\_TYPE" - drawAlong(DA) could not be executed because the DA.thingsToDraw property was provided but was not an object.
+* "NOTHING\_IN\_THINGS\_TO\_DRAW" - drawAlong(DA) could not run because DA.thingsToDraw was empty.
+* "REPEAT\_VALUE\_IS\_NOT\_A\_NUMBER" - drawAlong(DA) could not run because the DA.repeat value that was provided was not a number.
+* "PROGRESSIVE\_ZOOM\_VALUE\_IS\_NOT\_A\_NUMBER" - drawAlong(DA) could not run because the DA.progressiveZoom value that was provided was not a number.
+* "PROGRESSIVE\_ZOOM\_VALUE\_IS\_NOT\_A\_POSITIVE\_NUMBER") - drawAlong(DA) could not run because DA.progressiveZoom was a negative value.
+* "SPACE\_BETWEEN\_THINGS\_IS\_NOT\_A\_NUMBER" - drawAlong(DA) could not run because DA.spaceBetweenThings was not a number.
+* "FIT\_TYPE\_IS\_NOT\_A\_STRING" - drawAlong(DA) could not run because the value provided in DA.fit was not a string.
+* "INVALID\_FIT\_TYPE" - drawAlong(DA) could not run because the string that was provided in DA.fit was not "FITTHINGSTOPATH", "FITPATHTOTHINGS", or "NONE".
+* "ORIENTATION\_TYPE\_INVALID" - drawAlong(DA) could not run because the value provided in DA.orientation was not a string.
+* "INVALID\_ORIENTATION" - drawAlong(DA) could not run because the string provided in DA.orientation was neither "UPRIGHT" no "INLINE".
+* "INVALID\_PATH\_TO\_DRAW\_ALONG" - drawAlong(DA) could not run because DA.pathToDrawAlong was not an object.
 
