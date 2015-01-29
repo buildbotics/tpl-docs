@@ -32,7 +32,7 @@ try {
 	print(err,'\n');
 };
 ```
-The resulting cuts, which were simulated in the [Cambotics](http://openscam.org) simulator are shown here.
+The resulting cuts, which were simulated in the [Camotics](http://openscam.org) simulator are shown here.
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/8PointStar.png" height="300" width = "400">
 
@@ -41,7 +41,7 @@ DrawingAids functions (except for makePointsObjects() ) all use a similar style,
 * Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
 * Functions return a value of 0 if successful and -1 if not successful.
-* Functions returning -1 throw an error string with suggests the problem encountered.
+* Functions returning -1 throw an error string which suggests the problem encountered.
 * Functions returning 0 add a property that includes the result to the argument object.  The resulting property name differs among functions.
 
 One exception to these style rules is found in makePointsObjects(), which is a helper function that is provided to easily convert point lists in the form of [x,y] to {X: x,Y: y}.  See the description of makePointsObjects() for more information.
@@ -86,7 +86,7 @@ for (var i = 0; i <= 1; i+=.1) {
 }
 cutter.cutPath(path,safeHeight,bitWidth);
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/BezierCurve.png" height="300" width = "400">
 
 ####Arguments
@@ -127,7 +127,7 @@ S.grain = 10;
 da.FourPointTensionedBSpline(S);
 cutter.cutPath(S.spline,safeHeight,depth);
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/4PointSpline.png" height="300" width = "400">
 ####Arguments
 FourPointTensionedBSpline(S) accepts a single argument, S, that must be preloaded with the following properties:
@@ -175,7 +175,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/ExtendedSpline.png" height="300" width = "400">
 
@@ -220,7 +220,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/polyhedron.png" height="300" width = "400">
 ####Arguments
@@ -271,7 +271,7 @@ try {
 	cutter.cutPath(A.arc,safeHeight,bitWidth);
 } catch (err) { print(err,'\n'); };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/arc.png" height="300" width = "400">
 
@@ -323,7 +323,7 @@ try {
 	cutter.cutPath(r.rect,safeHeight,bitWidth);
 } catch (err) { print(err,'\n'); };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/rect.png" height="300" width = "400">
 
@@ -382,7 +382,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/star.png" height="300" width = "400">
 
@@ -451,7 +451,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/ellipse.png" height="300" width = "400">
 
@@ -508,7 +508,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/movedemo.png" height="300" width = "400">
 
@@ -570,7 +570,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/turndemo.png" height="300" width = "400">
 
@@ -648,7 +648,7 @@ try {
 	print(err,'\n');
 };
 ```
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/drawalong.png" height="300" width = "400">
 

@@ -1,6 +1,6 @@
 # HersheyText Aids Library
 ## Overview
-The Hertext Aids Library (HertextTextAids.js) is provided to allow tplang to use the fonts library known as HersheyText.js.  The HersheyText.js fonts library was provided by the [Evil Mad Scientist Laboratories](http://www.evilmadscientist.com/2014/hershey-text-js/).  HersheyText.js is provided with the [Cambotics](http://openscam.org) distribution along with [tplang](http://tplang.org).
+The Hertext Aids Library (HertextTextAids.js) is provided to allow tplang to use the fonts library known as HersheyText.js.  The HersheyText.js fonts library was provided by the [Evil Mad Scientist Laboratories](http://www.evilmadscientist.com/2014/hershey-text-js/).  HersheyText.js is provided with the [Camotics](http://openscam.org) distribution along with [tplang](http://tplang.org).
 
 At present, HersheyTextAids.js has only one function, which is getLineOfText(TC).  
 
@@ -38,7 +38,7 @@ for (var i = 0; i < line.paths.length; i++)
 	cutter.cutPath(line.paths[i],safeHeight,depth);
 ```
 
-The following image shows the [Cambotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/helloworld.png" height="300" width = "400">
 
 ####Arguments
