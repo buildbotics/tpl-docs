@@ -92,7 +92,7 @@ for (var i = 0; i < c.solutions.length; i++) cutter.cutPath(c.solutions[i],safeH
 
 The resulting cuts, which were simulated in the [Camotics](http://openscam.org) simulator are shown here.
 
-<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/starminuscircle.png" height="300" width = "400">
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/allcliptypes.png" height="300" width = "400">
 
 ####Arguments
 clip(CLIP accepts a single argument, CLIP.  CLIP is an object with properties that include the list of paths to be clipped (CLIP.subject), the list of paths to clip with (CLIP.clip) and the type of clipping to perform (CLIP.type).  CLIP has the following properties:
