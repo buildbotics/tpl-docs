@@ -220,7 +220,7 @@ makePathsPolygons(P) was created as a helper function that eases the use of open
 ####Example
 This example is not a typical use of makePathsPolygons(P), but is intended to show its affect on a set of paths.  The code below starts by retrieving the paths that represent the string "Buildbotics" using the getLineOfText() function in the [HersheyText Aids Library](https://github.com/buildbotics/tpl-docs/blob/master/HersheyText%20Aids%20Library.md).  The paths for the string in "Sans 1-Stroke" font are returned in document.paths.  It then cuts the result, which is shown in the top part of the [Camotics](http://openscam.org) simulator image below in the single line fonts.  It then uses makePathsPolygons(P) to turn the open-ended paths into polygons.  The middle part of the [Camotics](http://openscam.org) simulator image below shows the resulting cut.  Notice that each of the original paths is now a closed polygon.  Finally, clip(CLIP) is called to create a "UNION" of the polygons to make single, continuous polygons, which is shown in the bottom part of the [Camotics](http://openscam.org) simulator image.
 
-Once again, the author does not recommend this method of managing single line fonts.  A better scheme would be to create very thin polygons by setting P.delta to a small number (i.e. .01), and then using offset(OFF) with OFF.delta set to the 1/2 the width of the polygons that you actually want.
+Once again, the author does not recommend this method of managing single line fonts.  A better scheme would be to create very thin polygons by setting P.delta to a small number (i.e. .01), and then using offset(OFF) with OFF.offset set to the 1/2 the width of the polygons that you actually want.
 
 ```
 
@@ -267,13 +267,13 @@ The resulting cuts, which were simulated in the [Camotics](http://openscam.org) 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/makepathspolygons.png" height="300" width = "400">
 
 ####Arguments
-makePathsPolygons(P) accepts a single argument, P.  P is an object with properties that include the list of paths to convert to polygons and distance outward that the new polygons will be from the original paths.  P has the following properties:
+makePathsPolygons(P) accepts a single argument, P.  P is an object with properties that include the list of paths to convert to polygons and the distance outward that the new polygons will be from the original paths.  P has the following properties:
 * P.paths - P.paths is required and is a list of paths.  Each path within the list is a list of points in the form of {X: x, Y: y}.  This is the list of paths that will be traced at a an outward distance given by P.delta.
-* P.delta - P.delta is required and must be a positive number.  P.delta specifies the distance that the traces around the P.paths will be and will be 1/2 the width of the new polygons.
+* P.delta - P.delta is required and must be a positive number.  P.delta specifies the distance that the traces around the P.paths will be. P.delta will be 1/2 the width of the new polygons.
 
 ####Results
-makePathsPolygons(P) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, CLIP depending on whether an error is detected.
-P.polygons - P.polygons is a list of paths.  Each path within the list is a list of points in the form of {X: x, Y: y}. P.polygons will be contain one polygon for each path in P.paths, and that polygon will be a path that traverses around the polygon at a distance of P.delta.
+makePathsPolygons(P) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, P depending on whether an error is detected.
+* P.polygons - P.polygons is a list of paths.  Each path within the list is a list of points in the form of {X: x, Y: y}. P.polygons will be contain one polygon for each path in P.paths, and that polygon will be a path that traverses around the polygon at a distance of P.delta.
 
 ####Error Messages
 * "ARGUMENT\_NOT_\PROVIDED" - Polygons could not be created because the single object argument (P) was not provided.
