@@ -123,7 +123,94 @@ If an error is detected, clip(CLIP) returns -1 and throws one of the following e
   * "DIFFERENCE"
   * "XOR"
 
+###offset(OFF)
+####Description
+offset(OFF) provides a list of paths that are traces along existing polygons.  The traces can either be inside or outside of the existing polygons. The amount that the traces are offset from the existing polygons is given by an offset value.  Offset values that are negative will trace inside the existing polygons and traces that are positive will trace along the outside of polygons by the offset value.
+
+####Example
+The following code shows some of the power of the Clipper Library.  It starts by making a rectangle and an ellipse and moving the ellipse to the right using functions in the Drawing Aids Library. It then creates another rectangle and places it over the first rectangle and the ellipse.  Next, it uses clip(CLIP) with the first rectangle and the ellipse as the subject and the second rectangle as the clip and gets the difference.  Next, it repetitively calls offset(OFF) with larger and larger negative offsets on the solutions from the difference clip.  Each time offset(OFF) is called it returns a set of solutions that are cut paths.  Those paths are cut on each succession until offset(OFF) no longer returns any solutions.  The result of this cutting is shown below.
+
+It's worth noting that it starts by cutting single paths along the inner border of the of the first rectangle and the ellipse, and it cuts along the outer border of the second rectangle.  These two cutting patterns continue and "squeeze in" on one-another until a single path cannot be created without crossing other paths.  At that point, offset is able to divide the paths into separate paths, providing more solutions but not wasting cutting patterns over areas that have already been cut.
+
+As you can see, this is a great way to cut out very complex pocket shapes.
+
+```
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var clipper = require('clipper');
+var ca = require('ClipperAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+var r = {};
+r.width = 100,r.height = 100;
+da.makeRectangle(r);
+var e = {width: 150,height:100,increments: 100};
+da.makeEllipse(e);
+var m = {x: 100,y: 0,paths: [e.ellipse]}
+da.moveBy(m);
+
+var r2 = {width: 150, height: 50}
+da.makeRectangle(r2);
+var m2 = {x: 50, y: 0, paths: [r2.rect]};
+da.moveBy(m2);
+
+var CLIP = {subject: [m.newPaths[0],r.rect],clip: m2.newPaths,type: "DIFFERENCE"};
+ca.clip(CLIP);
+
+var OFF = {};
+OFF.paths = CLIP.solutions;
+OFF.offset = 0;
+
+do {
+	ca.offset(OFF);
+	for(var i = 0;i<OFF.solutions.length;i++) cutter.cutPath(OFF.solutions[i],safeHeight,depth);
+	OFF.offset -= bitWidth/2;
+} while (OFF.solutions.length > 0);
+```
 
 
+The resulting cuts, which were simulated in the [Camotics](http://openscam.org) simulator are shown here.  Note that the cutting paths are displayed.  Close observation of those paths will give some clues as to how the resulting list of paths in each successive set of solutions look.
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/offsetexample.png" height="300" width = "400">
+
+####Arguments
+offset(OFF) accepts a single argument, OFF.  OFF is an object with properties that include the list of paths to be offset, the method of join polygons together, the end type of the polygons, and the offset to use.  OFF has the following properties:
+* OFF.paths - OFF.paths is required and is a list of paths.  Each path within the list is a list of points in the form of {X: x, Y: y}.  This is the list of paths whose borders will be traced at an offset given by OFF.offset.
+* OFF.offset - OFF.offset is a number that specifies the amount that the traces will be offset from the original polygon paths.  Positive OFF.offset values will cause the solutions to be outside the outer polygons and negative OFF.offset values will cause the solutions to be inside the outer polygons.  
+* OFF.joinType - OFF.joinType is optional.  When provided, it is a string that specifies how the polygons in OFF.paths will be joined to together.  The default is "MITER".  Please refer to the [clipper.js](http://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibjointype) documentation for further explanation of joinTypes.  The following values are acceptable:
+  * "MITER" - This is the default.
+  * "ROUND"
+  * "SQUARE"
+* OFF.endType - OFF.endType is a string that specifies how the line ends will be shaped.  OFF.endType is optional and the default value  is "CLOSEDPOLYGON".  Please refer to the [clipper.js](http://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibendtype) documentation for further explanation of joinTypes. The following values are possible:
+  * "OPENSQUARE"
+  * "OPENROUND"
+  * "OPENBUTT"
+  * "CLOSEDLINE"
+  * "CLOSEDPOLYGON"
+  
+Note, this clipping library is meant to work with closed polygons.  You will find that neither clip(CLIP) nor offset(OFF) will return open polygons, and the first and last points in each path returning from those functions are the same.  As a result, joinType and endType are mostly irrelavent.  You are welcome to experiment with them and let us know what you find.  However, those wishing to use such features are encouraged to use the [clipper.js](http://sourceforge.net/projects/jsclipper/) library directly.
+
+###Results
+####Results
+offset(OFF) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, CLIP depending on whether an error is detected.
+* OFF.solutions - If no error is detected, OFF.solutions will be loaded with the list of paths that result from the offset operation.  OFF.solutions is a list of paths.  Each of the paths within the list of paths is a list of point objects in the form of {X: x, Y: y}.
+
+####Error Messages
+If an error is detected, offset(OFF) returns -1 and throws one of the following error messages:
+* "ARGUMENT\_NOT\_PROVIDED" - The offset operation could not run because no argument object (OFF) was not provided.
+* "INVALID\_ARGUMENT" - The offset operation could not run because the argment was not and object.
+* "PATHS\_NOT\_PROVIDED" - The offset operation could not run because a list of paths to be offset was not provided.
+* "PATHS\_INVALID" - The offset operation could not run because the list of paths that was provided was not in the form of a list of lists of points in the form of {X: x, Y: y}.
+* "OFFSET\_NOT\_PROVIDED" - The offset operation could not run because the offset was not provided.
+* "OFFSET\_INVALID" - The offset operation could not run because the OFF.offset that was provided was not a number.
+* "JOIN\_TYPE\_INVALID" - The offset operation could not run because the OFF.joinType value that was provided was not one of the valid strings for OFF.joinType.
+* "END\_TYPE\_INVALID" - The offset operation could not run because the OFF.endType value that was provided was not one of the valid strings for OFF.joinType.
 
 
