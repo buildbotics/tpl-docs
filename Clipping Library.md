@@ -125,7 +125,7 @@ If an error is detected, clip(CLIP) returns -1 and throws one of the following e
 
 ###offset(OFF)
 ####Description
-offset(OFF) provides a list of paths that are traces along existing polygons.  The traces can either be inside or outside of the existing polygons. The amount that the traces are offset from the existing polygons is given by an offset value.  Offset values that are negative will trace inside the existing polygons and traces that are positive will trace along the outside of polygons by the offset value.
+offset(OFF) provides a list of paths that are traces along existing polygons.  The traces can either be inside or outside of the existing polygons. The amount that the traces are offset from the existing polygons is given by an offset value.  Offset values that are negative will trace inside the existing polygons and offsets that are positive will trace along the outside of polygons by the offset value.
 
 ####Example
 The following code shows some of the power of the Clipper Library.  It starts by making a rectangle and an ellipse and moving the ellipse to the right using functions in the Drawing Aids Library. It then creates another rectangle and places it over the first rectangle and the ellipse.  Next, it uses clip(CLIP) with the first rectangle and the ellipse as the subject and the second rectangle as the clip and gets the difference.  Next, it repetitively calls offset(OFF) with larger and larger negative offsets on the solutions from the difference clip.  Each time offset(OFF) is called it returns a set of solutions that are cut paths.  Those paths are cut on each succession until offset(OFF) no longer returns any solutions.  The result of this cutting is shown below.
@@ -181,7 +181,7 @@ The resulting cuts, which were simulated in the [Camotics](http://openscam.org) 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/offsetexample.png" height="300" width = "400">
 
 ####Arguments
-offset(OFF) accepts a single argument, OFF.  OFF is an object with properties that include the list of paths to be offset, the method of join polygons together, the end type of the polygons, and the offset to use.  OFF has the following properties:
+offset(OFF) accepts a single argument, OFF.  OFF is an object with properties that include the list of paths to be offset, the method of joining polygons together, the end type of the polygons, and the offset to use.  OFF has the following properties:
 * OFF.paths - OFF.paths is required and is a list of paths.  Each path within the list is a list of points in the form of {X: x, Y: y}.  This is the list of paths whose borders will be traced at an offset given by OFF.offset.
 * OFF.offset - OFF.offset is a number that specifies the amount that the traces will be offset from the original polygon paths.  Positive OFF.offset values will cause the solutions to be outside the outer polygons and negative OFF.offset values will cause the solutions to be inside the outer polygons.  
 * OFF.joinType - OFF.joinType is optional.  When provided, it is a string that specifies how the polygons in OFF.paths will be joined to together.  The default is "MITER".  Please refer to the [clipper.js](http://sourceforge.net/p/jsclipper/wiki/documentation/#clipperlibjointype) documentation for further explanation of joinTypes.  The following values are acceptable:
@@ -205,7 +205,7 @@ offset(OFF) will return 0 if no errors are detected and -1 if an error is detect
 ####Error Messages
 If an error is detected, offset(OFF) returns -1 and throws one of the following error messages:
 * "ARGUMENT\_NOT\_PROVIDED" - The offset operation could not run because no argument object (OFF) was not provided.
-* "INVALID\_ARGUMENT" - The offset operation could not run because the argment was not and object.
+* "INVALID\_ARGUMENT" - The offset operation could not run because the argment was not an object.
 * "PATHS\_NOT\_PROVIDED" - The offset operation could not run because a list of paths to be offset was not provided.
 * "PATHS\_INVALID" - The offset operation could not run because the list of paths that was provided was not in the form of a list of lists of points in the form of {X: x, Y: y}.
 * "OFFSET\_NOT\_PROVIDED" - The offset operation could not run because the offset was not provided.
@@ -213,4 +213,55 @@ If an error is detected, offset(OFF) returns -1 and throws one of the following 
 * "JOIN\_TYPE\_INVALID" - The offset operation could not run because the OFF.joinType value that was provided was not one of the valid strings for OFF.joinType.
 * "END\_TYPE\_INVALID" - The offset operation could not run because the OFF.endType value that was provided was not one of the valid strings for OFF.joinType.
 
+###makePathsPolygons(P)
+####Description
+makePathsPolygons(P) was created as a helper function that eases the use of open ended strokes with the Clipper Library.  It's purpose is to take a list of open-ended paths, and trace around them to create very thin polygons.  These resulting polygons can then be handed to offset(OFF) or clip(CLIP) to to perform their functions.  makePathsPolygons(P) accepts a single object (P) as an argument, which has members that include the list of paths to comvert to polygons and the distance that resulting traces will be outward from the original path.
 
+####Example
+This example is not a typical use of makePathsPolygons(P), but is intended to show its affect on a set of paths.  The code below starts by retrieving the paths that represent the string "Buildbotics" using the getLineOfText() function in the [HersheyText Aids Library](https://github.com/buildbotics/tpl-docs/blob/master/HersheyText%20Aids%20Library.md).  The paths for the string in "Sans 1-Stroke" font are returned in document.paths.  It then cuts the result, which is shown in the top part of the [Camotics](http://openscam.org) simulator image below in the single line fonts.  It then uses makePathsPolygons(P) to turn the open-ended paths into polygons.  The middle part of the [Camotics](http://openscam.org) simulator image below shows the resulting cut.  Notice that each of the original path is now a closed polygon.  Finally, clip(CLIP) is called to create a "UNION" of the polygons to make single, continuous polygons, which is shown in the bottom part of the [Camotics](http://openscam.org) simulator image.
+
+Once again, the author does not recommend this method of managing single line fonts.  A better scheme would be to create very thin polygons by setting P.delta to a small number (i.e. .01), and then using offset(OFF) with OFF.delta set to the 1/2 the width of the polygons that you actually want.
+
+```
+
+units(METRIC); // units are in inches
+feed(30); // feed rate us 30 inches per minute
+speed(4000); // spindle speed is 4000 rpm
+var bitWidth = 3.125;
+var safeHeight = 3;
+var depth = 6.4;
+tool(1);
+
+var clipper = require('clipper');
+var ca = require('ClipperAids');
+var hf = require('hersheytext');
+var ha = require('HersheyTextAids');
+var da = require('DrawingAids');
+var cutter = require('CuttingAids');
+
+var document = {};
+document.text = 				"Buildbotics";
+document.spacing = 			-1;
+document.scale = 				5;
+document.lineHeight = 	40;
+document.font = 				"Sans 1-stroke";
+document.spaceSize = 		5;
+document.tabInterval = 	40;
+ha.getLineOfText(document);
+translate(0,400,0);
+for (var i = 0; i < document.paths.length; i++ ) cutter.cutPath(document.paths[i],safeHeight,depth);
+
+translate(0,-200,0);
+var P = {paths: document.paths, delta: 5};
+ca.makePathsPolygons(P);
+for (var i = 0; i < P.polys.length; i++ ) cutter.cutPath(P.polys[i],safeHeight,depth);
+
+translate(0,-200,0);
+var C = {subject: P.polys, clip: [[]], type: "UNION"};
+ca.clip(C);
+for (var i = 0; i < C.solutions.length; i++ ) cutter.cutPath(C.solutions[i],safeHeight,depth);
+```
+
+The resulting cuts, which were simulated in the [Camotics](http://openscam.org) simulator are shown here.
+
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/makepathspolygons.png" height="300" width = "400">
