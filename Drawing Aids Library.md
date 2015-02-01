@@ -1,24 +1,17 @@
 # DrawingAids Library
 ## Table of Contents
 
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
 | Section              | SubSection            |
 |----------------------|:---------------------:|
 |[Overview](## Overview) |                     |
-|                      |[Example](## Example)  |
-|                      |[Style](## Stype)      |
+|                      |[Example](#OverviewExample)  |
+|                      |[Style](#OverviewStyle)      |
 |[Functions](## Functions)|                    |
-|                      |[makePointsObjects\(pointList\)](###makePointsObjects\(pointList\)) |
+|                      |[makePointsObjects\(pointList\)](#makePointsObjects)) |
 
 ## Overview
 The DrawingAids library is meant to be used with [tplang](http://tplang.org), and provides a set of commonly needed drawing tools.
-## Example
+## Example <a name = 'OverviewExample' />
 This example shows how the DrawingAids Library can be used in conjunction with the CuttingAids library to create the [g-code](http:reprap.org/wiki/G-code) needed to cut out a eight-point star with rounded vertexes.
 
 ```
@@ -53,7 +46,7 @@ The resulting cuts, which were simulated in the [Camotics](http://openscam.org) 
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/8PointStar.png" height="300" width = "400">
 
-## Style
+## Style <a name = 'OverviewStyle' />
 DrawingAids functions (except for makePointsObjects() ) all use a similar style, which is described as follows:
 * Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
@@ -63,8 +56,8 @@ DrawingAids functions (except for makePointsObjects() ) all use a similar style,
 
 One exception to these style rules is found in makePointsObjects(), which is a helper function that is provided to easily convert point lists in the form of [x,y] to {X: x,Y: y}.  See the description of makePointsObjects() for more information.
 
-## Functions
-###makePointsObjects(pointList)
+## Functions <a name = 'Functions'/>
+###makePointsObjects(pointList) <a name = 'makePointsObjects'/>
 ####Description
 Converts a list of points in the form of [x,y] found in pointList to the form of {X: x,Y: y} and returns the resulting list.
 ####Arguments
