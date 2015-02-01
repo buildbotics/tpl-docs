@@ -71,16 +71,18 @@ One exception to these style rules is found in makePointsObjects(), which is a h
 ###makePointsObjects(pointList) <a name = 'makePointsObjects'/>
 ####Description
 Converts a list of points in the form of [x,y] found in pointList to the form of {X: x,Y: y} and returns the resulting list.
+[Back to Table of Contents](#Table of Contents)
 ####Arguments
 pointList - a list of points.  The form of pointList is [[x1,y1],[x2,y2],...,[xn,yn]] .
 ####Results
 returns a list of points in the form of [{X: x1,Y: y1},{X: x2,Y: y2},...,{{X: xn,Y: yn}] .
 ####Errors
 no error checking is provided in makePointsObjects().  If it fails, you should review the format of the input list.
-
+[Back to Table of Contents](#Table of Contents)
 ###bezierPoint(BEZ) <a name = 'bezierPoint' />
 ####Description
 bezierPoint(BEZ) accepts an object argument (BEZ) that is loaded with a four-point list and a position argument.  It returns the point found at "position' along the bezier curve described in the four-point list.
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code captures points at 10% intervals along a bezier curve and then cuts them out.
 ```
@@ -128,6 +130,7 @@ bezierPoint(BEZ) does not provide any error checking at this time.
 ###FourPointTensionedBSpline(S) <a name = 'FourPointTensionedSpline' />
 ####Description
 FourPointTensionedBSpline(S) accepts one object argument, S, and creates a spline curve between  the two "knots" in the point list provided in "S.points" and places the result in the "S.spline" property of the argument object, S.  The tension of the resulting spline is defined by the S.tension property and the number of points to return is defined by the S.grain property.
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates a 10 point spline between the two knots (points 1 and 2) of the point list.
 ```
@@ -165,10 +168,11 @@ FourPointTensionedBSpline(S) always returns 0 and will place the resulting curve
 ####Error Messages
 FourPointTensionedBSpline(S) does not provide any error checking at this time.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ### makeSpline(S) <a name = 'makeSpline'/>
 ####Description
 makeSpline(S) accepts an object that contains an extended list of points provided in S.points and places a spline curve that approximates the list while smoothing out corners in S.spline.  The extent to which the curve pulls away from the points given depends on the tension parameter provided in S.tension.  The granularity of the curves is specified in S.grain.
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates an extended spline based on the points provided.  It then cuts the original points, translates to the right by 50 and cuts the spline.
 ```
@@ -217,10 +221,11 @@ makeSpline(S) returns 0 if successful and -1 if a failure is detected.
 If an error is detected the following error will be trown.
 * "INSUFFICIENT\_NUMBER\_OF\_POINTS"
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###polyhedron(P) <a name = 'polyhedron'/>
 ####Description
-polyhedron(P) accepts a single object (P) as an argument and creates a polyhedron based on the content of the object.  The contents of P will contain the number of sides to the polyhedron and the radius of the polyhedron.  Optionally, P may specify that the vertexes of the polyhedron be rounded and if so how many increments should be provided in each rounded vertex.  The resulting polyhedron is centered around the origin {X: 0,Y: 0}
+polyhedron(P) accepts a single object (P) as an argument and creates a polyhedron based on the content of the object.  The contents of P will contain the number of sides to the polyhedron and the radius of the polyhedron.  Optionally, P may specify that the vertexes of the polyhedron be rounded and if so how many increments should be provided in each rounded vertex.  The resulting polyhedron is centered around the origin {X: 0,Y: 0}.
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates a five point polyhedron with a radius of 100 and rounded vertexes.  The radius of the vertexes is 15 and each rounded vertex is broken into 10 increments.
 ```
@@ -271,10 +276,11 @@ If an error is detected, polyhedron(P) returns -1 and throws  one of the followi
 * "CINCS\_INVALID\_TYPE" - P.cincs was provided, but it is not a number.  The corner radius must be a number.
 * "CINCS\_IS\_LESS\_THAN\_2" - P.cincs is less than two.  Less than two increments would not round the polygon vertexes.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###makeArc(A) <a name = 'makeArc' />
 ####Description
 makeArc(A) accepts a single object as an argument and creates an arc.  The object contains the starting point for the arc, the center point of the arc, the number of increments (line segments) that make up the arc, and the angle (in radians) over which the arc will be drawn.
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates an arc starting at {X: 0, Y: 0} around the center point at {X:0,Y:50} extending over pi radians (1/2 circle) and consisting of 100 line segments.
 ```
@@ -323,11 +329,11 @@ If an error is detected, makeArc(A) returns -1 and throws one of the following v
 * "ANGLE\_NOT\_DEFINED" - An arc could not be struck because the angle was not defined.
 * "INVALID\_ANGLE" - An arc could not be struck because the angle is not a number.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###makeRectangle(R) <a name = 'makeRectangle' />
 ####Description
 makeRectangle(R) creates rectangles.  The rectangles can have square or rounded corners.  It accepts a single argument, which is an object containing the desired width and height, and optionally the radius and number of increments in rounded corners.  The resulting rectangle is centered around the origin {X: 0,Y: 0}.
-
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates a rectangle with a width of 150 and a height of 100.  The rectangle has rounded corners with corner radii of 10.  Each corner will be broken into 10 increments (10 line segments). 
 ```
@@ -375,11 +381,11 @@ If an error is detected, makeRectangle(R) returns -1 and throws one of the follo
 * "CORNER\_INCREMENTS\_NOT\_DEFINED" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the number of corner increments was not specified.
 * "CORNER\_INCREMENTS\_INVALID" - A rectangle was not formed because the corner radius was provided and was greater than 0, but the specified number of corner increments was not a number.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###makeStar(S) <a name = 'makeStar' />
 ####Description
 makeStar(S) creates a star.  The resulting star can have rounded inner and outer vertexes.  It accepts a single argument, which is an object containing the desired radius at the other vertexes, the radius at the inner vertexes, the number of points on the desired star, and optionally the radius and number of increments in rounded outer and inner vertexes.  The radius of the outer and inner vertexes may be different and are specified independently. The resulting star is centered around the origin {X: 0,Y: 0}.
-
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates an 8-pointed star with an outer vertex radius of 100, an inner vertex radius of 30.  The star has rounded inner and outer vertexes.  The outer vertexes are rounded around a radius of 6 and broken into 10 increments (10 line segments).  The inner vertexes are rounded around a radius of 3 and broken into 5 increments. 
 ```
@@ -428,7 +434,6 @@ makeStar(S) accepts a single argument, S.  S is an object with properties that d
 makeStar(S) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, S depending on whether an error is detected.
 * S.star - S.star is a list of points in the form of {X: x, Y: y} that form the desired star.  S.star will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, S.star will be loaded with the resulting star.
 
-[Back to Overview](#Overview)
 ####Error Messages
 If an error is detected, makeStar(S) returns -1 and throws one of the following values:
 * "STAR\_OBJECT\_ARG\_NOT\_DEFINED" - A star could not be created because no argument was provided.
@@ -450,12 +455,12 @@ If an error is detected, makeStar(S) returns -1 and throws one of the following 
 * "INNER\_VERTEX\_INCREMENTS\_NOT\_DEFINED" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertex increments was not.
 * "INNER\_VERTEX\_INCREMENTS\_INVALID\_TYPE" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertexes that was specified was not a number.
 * "INNER\_VERTEX\_INCREMENTS\_NOT\_AN\_INTEGER" - A star could not be created because the radius of inner vertexes was specified, but the number of inner vertexes that was specified was not an integer.
-
+[Back to Table of Contents](#Table of Contents)
 ###makeEllipse(E) <a name = 'makeEllipse' />
 
 ####Description
 makeEllipse(E) creates an ellipse.  It accepts a single argument, which is an object containing the width, height, and number of line segments of the desired ellipse.  The resulting ellipse will be centered around the origin (X: 0,Y: 0}.
-
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates an ellipse that is 70 points wide, 200 points high and consists of 100 line segments.
 ```
@@ -505,11 +510,11 @@ If an error is detected, makeEllipse(E) will throw one of the following error me
 * "ELLIPSE\_INCREMENTS\_NOT\_DEFINED" - An ellipse could not be created because the desired number of increments that would make up the resulting ellipse was not provided.
 * "ELLIPSE\_INCREMENTS\_NOT\_VALID" - An ellipse could not be created because the desired number of increments that would make up the resulting ellipse was not a number.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###moveBy(M) <a name = 'moveBy' />
 ####Description
 moveBy(M) moves an existing list of paths to a new location.  It accepts a single argument, which is an object containing the list of paths (M.paths) to be moved and the x and y coordinates to move by.  The new list of paths will be identical to the original list of paths except it will be transposed by M.x points along the x-axis and M.y points along the y axis.
-
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates and cuts a five-point, rounded polygon, then moves it 100 points along the x axis and 100 points along the y axis and cuts it again.
 ```
@@ -561,14 +566,14 @@ If an error is detected, moveBy(M) will throw one of the following error message
 * "X\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.x property that was provided was not a number.	
 * "Y\_MOVE\_VALUE\_INVALID" - The desired move could not be accomplished because the M.y property that was provided was not a number.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###turnBy(T) <a name = 'turnBy' />
 ####Description
 turnBy(T) turns a list of paths by a specified angle around a specified point. It accepts a single argument, which is an object containing the list of paths (T.paths) to be rotated around a specified turning point (T.tp) by a specified angle (T.angle)  .The resulting list of paths will be identical to the original list of paths except it will have been rotated around the specified point by the specified angle.
 
 ####Example
 The following code creates a four-point polyhedron with rounded corners around the origin {X: 0, Y: 0} and cuts it.  It then moves the polyhedron up the y axis by 200 points and cuts it again. Finally, it turns the shape around the origin ({X: 0, Y: 0} by pi/4 radians and makes the third cut.
-
+[Back to Table of Contents](#Table of Contents)
 ```
 units(METRIC); // units are in inches
 feed(30); // feed rate us 30 inches per minute
@@ -626,11 +631,11 @@ If an error is detected, turnBy(T) will throw one of the following error message
 * "TURNING\_ANGLE\_NOT\_PROVIDED" - The turn could not be accomplished because the angle over which to turn was not provided.
 * "TURNING\_ANGLE\_INVALID" - The turn could not be accomplished because the angle that was provided was not a number.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 ###drawAlong(DA) <a name = 'drawAlong' />
 ####Description
 drawAlong(DA) allows drawing a series of things along a specific path.  drawAlong(DA) accepts a single argument (DA), which is an object with several properties including the list of things to draw, the path to draw the things along, how many times to repeat drawing the things, whether the things should turn to be inline with the specified path or remain upright, whether the things should be progressively zoomed along the path and whether to fit the path to the things, fit the things to the path,or just let the things continue to be drawn until the path runs out.  If successful, drawAlong will return 0 and load the new set of things into the DA object that are similar to the original list of things but located and oriented along the path.
-
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates a four point polyhedron, a rectangle with rounded corners, and a half-circle arc.  It then creates an object called DA\_ctrls and adds a list of things to the DA\_ctrls.thingsToDraw property.  Those things include three copies of the 4-point polyhedron previously created and the rectangle.  It sets the spacing between things to be 20, requests that the list of things be repeated three times, directs that the path will be adjusted to fit the size of the list of things (including spaces), sets the path to follow to be the arc that was previously created, tells it to zoom each thing by .9 times the zooming of the previous thing, and tells it to orient the things so that they will turn to be inline with the path at the point along the path where they will fall.
 
@@ -720,4 +725,4 @@ If drawAlong(DA) detects and error it will return -1 and throw one of the follow
 * "INVALID\_ORIENTATION" - drawAlong(DA) could not run because the string provided in DA.orientation was neither "UPRIGHT" nor "INLINE".
 * "INVALID\_PATH\_TO\_DRAW\_ALONG" - drawAlong(DA) could not run because DA.pathToDrawAlong was not an object.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
