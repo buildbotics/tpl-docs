@@ -1,5 +1,5 @@
 # DrawingAids Library
-## Table of Contents
+## Table of Contents <a name = 'Table of Contents' />
 
 | Section              | SubSection                                              |
 |----------------------|:-------------------------------------------------------:|
@@ -123,7 +123,7 @@ bezierPoint(BEZ)_ always returns 0. In addition, it sets the following member va
 ####Error Messages
 bezierPoint(BEZ) does not provide any error checking at this time.
 
-[Back to Overview](#Overview)
+[Back to Table of Contents](#Table of Contents)
 
 ###FourPointTensionedBSpline(S) <a name = 'FourPointTensionedSpline' />
 ####Description
