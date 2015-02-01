@@ -8,13 +8,13 @@
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are neat      |    $1 |
 
-
-|----------------------|:---------------------:|-------------------------:|
-|[Overview](## Overview) |                     |                          |
-|                      |[Example](## Example)  |                          |
-|                      |[Style](## Stype)      |                          |
-|                      |[Functions](## Functions)|                        |
-|                      |                         |[makePointsObjects(pointList)](###makePointsObjects(pointList\)) |
+| Section              | SubSection            |
+|----------------------|:---------------------:|
+|[Overview](## Overview) |                     |
+|                      |[Example](## Example)  |
+|                      |[Style](## Stype)      |
+|[Functions](## Functions)|                    |
+|                      |[makePointsObjects\(pointList\)](###makePointsObjects\(pointList\)) |
 
 ## Overview
 The DrawingAids library is meant to be used with [tplang](http://tplang.org), and provides a set of commonly needed drawing tools.
