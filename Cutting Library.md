@@ -102,7 +102,7 @@ try {
 } catch (err) {
 	console.log(err.stack);
 };
-'''
+```
 The resulting [g-code](http:reprap.org/wiki/G-code) was simulated in the [Camotics](http://openscam.org) simulator and the result is shown here.
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/cutpanel.png" height="300" width = "400">
