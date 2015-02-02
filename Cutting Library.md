@@ -1,19 +1,37 @@
 #Cutting Library
-##Overview
+## Table of Contents <a name = 'Table of Contents' />
+
+| Section              | SubSection                                              |
+|----------------------|:-------------------------------------------------------:|
+|[Overview](#Overview) |                                                         |
+|                      |[Style](#OverviewStyle)                                  |
+|[Functions](#Functions)|                                                        |
+|                      |[getLineOfText(TC)](#getLineOfText)                      |
+|                      |[cutPath(P)](#cutPath)                                   |
+|                      |[cutPanel(PANEL)](#cutPanel)                             |
+|                      |[emboss(EMB)](#emboss)                                   |
+
+##Overview <a name = 'Overview' />
 The purpose of the Cutting Library is to provide some commonly used functions needed for cutting, thereby simplifying the task of writing [tplang](http://tplang.org) programs.  The Cutting Library makes use of the [Clipping Library](https://github.com/buildbotics/tpl-docs/blob/master/Clipping%20Library.md).
 
-## Style
+[Back to Table of Contents](#Table of Contents)
+
+## Style <a name = 'OverviewStyle' />
 The Cutting Library functions all use a similar style, which is described as follows:
 * Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
 * Functions return a value of 0 if successful.
 * If an error is detected, functions throw an error string which suggests the problem encountered.  The message and stack trace can be read by catching the error variable and the reading the stack property of that error (e.g. err.stack).
-* Functions returning 0 add properties that include the result to the argument object.  The resulting property names differ among functions.
+* Functions returning 0 may add properties that include the result to the argument object.  The resulting property names differ among functions.
 
-##Functions
-###cutPath(P)
+[Back to Table of Contents](#Table of Contents)
+
+##Functions <a name = 'Functions' />
+###cutPath(P) <a name = 'cutPath' />
 ####Description
 cutPath(P) accepts a single object (P) as an argument, which contains the path to cut, the safe height for rapid moves, and the cutting depth.  With this information cutPath(P) outputs the [g-code](http:reprap.org/wiki/G-code) needed to cut the path.
+
+[Back to Table of Contents](#Table of Contents)
 
 ####Example
 The following code creates a 100 by 75 rectangle and cuts it out.
@@ -66,9 +84,13 @@ If an error is detected, cutPath(P) will throw one of the following error messag
 * "CUTTING\_DEPTH\_NOT\_PROVIDED" - G-code could not be created because the cutting depth (P.depth) was not provided.
 * "INVALID\_CUTTING\_DEPTH" - G-code could not be created because the cutting depth (P.depth) that was provided was not a number.
 
-###cutPanel(PANEL)
+[Back to Table of Contents](#Table of Contents)
+
+###cutPanel(PANEL) <a name = 'cutPanel' />
 ####Description
 cutPanel(PANEL) accepts a single argument, containing properties that include a list of polygons, the rapid movement safe height, the cutting depth, the bit width, an offset value, and optionally a limit on the number of concentric loops to cut.  Using these properties, cutPanel(PANEL) cuts out the areas defined by the list of polygons.
+
+[Back to Table of Contents](#Table of Contents)
 
 Note - For reliable results, the paths in all polygons provided in the PANEL.shapes parameter must travel in the same direction.  The results will be unpredictable if some paths travel clockwise and others travel counter-clockwise.
 
@@ -135,9 +157,14 @@ If an error is detected, cutPanel(PANEL) will throw one of the following error m
 * "INVALID\_OFFSET" - The panel could not be cut because the offset property PANEL.offset that was provided was not a number.
 * "LOOPS\_INVALID" - The panel could not be cut because the loops property (PANEL.loops) that was provided was not a number.
 
-###emboss(EMB)
+[Back to Table of Contents](#Table of Contents)
+
+###emboss(EMB) <a name = 'emboss' />
 ####Description
 emboss(EMB) accepts a single argument, containing properties that include a boundary polygon (EMB.boundary), a set of masks (EMB.masks), the rapid movement head height ((EMB.safeHeight), the cutting depth (EMB.depth), the width of the cutting bit (EMB.bitWidth), the offset from the from the polygon border where the cutting will begin (EMB.offset), and optionally, the number of cutting loops to make (EMB.loops).  Using these properties, emboss(EMB) cuts out the areas inside the boundary but leaving the masks intact.  The main purpose of emboss(EMB) allow uncut areas to project outward from the surface of the material.
+
+[Back to Table of Contents](#Table of Contents)
+
 ####Example
 The following code gets paths for the string "Buildbotics" in Sans 1-stroke font and converts them to polygons.  Then it creates an ellipse that is large enough to encompass the text and moves it to a location where it surrounds the text.  Finally, it calls emboss to cut the areas not enclosed by the text polygons.
 
@@ -221,4 +248,4 @@ If an error is detected, emboss(EMB) will throw one of the following error messa
 * "INVALID\_OFFSET" - emboss(EMB) could not execute because the offset property (EMB.offset) that was provided was not a number.
 * "LOOPS\_INVALID" - emboss(EMB) could not execute because the loops property (EMB.loops) that was provided was not a number.
 
-
+[Back to Table of Contents](#Table of Contents)
