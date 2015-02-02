@@ -16,7 +16,7 @@ The Clipping Library provides a set of functions that allow [tplang](http://tpla
 
 [Back to Table of Contents](#Table of Contents)
 
-##Example <a name == 'OverviewExample' />
+##Example <a name = 'OverviewExample' />
 The following code shows how the Clipping Library can be used to merge two rectangles that are offet from one another into a single continuous shape and then cut the result.
 ```
 units(METRIC); // units are in inches

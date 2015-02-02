@@ -6,7 +6,6 @@
 |[Overview](#Overview) |                                                         |
 |                      |[Style](#OverviewStyle)                                  |
 |[Functions](#Functions)|                                                        |
-|                      |[getLineOfText(TC)](#getLineOfText)                      |
 |                      |[cutPath(P)](#cutPath)                                   |
 |                      |[cutPanel(PANEL)](#cutPanel)                             |
 |                      |[emboss(EMB)](#emboss)                                   |

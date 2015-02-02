@@ -15,7 +15,7 @@ At present, HersheyTextAids.js has only one function, which is getLineOfText(TC)
 
 [Back to Table of Contents](#Table of Contents)
 
-## Style <a name = 'OverviewStype' />
+## Style <a name = 'OverviewStyle' />
 HersheyTextAids.js style is described as follows:
 * Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
@@ -108,4 +108,5 @@ If an error is detected, getLineOfText(TC) throws one of the following values:
 * "SPACE\_SIZE\_INVALID" - Paths could not be created because the TC.spaceSize property that was provided was not a number.
 * "TAB\_INTERVAL\_INVALID" - Paths could not be created because the TC.tabInterval property that was provided was not a number.
 
+[Back to Table of Contents](#Table of Contents)
 
