@@ -1,21 +1,36 @@
 # HersheyText Aids Library
-## Overview
+## Table of Contents <a name = 'Table of Contents' />
+
+| Section              | SubSection                                              |
+|----------------------|:-------------------------------------------------------:|
+|[Overview](#Overview) |                                                         |
+|                      |[Style](#OverviewStyle)                                  |
+|[Functions](#Functions)|                                                        |
+|                      |[getLineOfText(TC)](#getLineOfText)                      |
+
+## Overview <a name = 'Overview' />
 The Hertext Aids Library (HertextTextAids.js) is provided to allow tplang to use the fonts library known as HersheyText.js.  The HersheyText.js fonts library was provided by the [Evil Mad Scientist Laboratories](http://www.evilmadscientist.com/2014/hershey-text-js/).  HersheyText.js is provided with the [Camotics](http://openscam.org) distribution along with [tplang](http://tplang.org).
 
-At present, HersheyTextAids.js has only one function, which is getLineOfText(TC).  
+At present, HersheyTextAids.js has only one function, which is getLineOfText(TC).
 
-## Style
+[Back to Table of Contents](#Table of Contents)
+
+## Style <a name = 'OverviewStype' />
 HersheyTextAids.js style is described as follows:
-* Functions accept and return points in object form.  For instance, a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
+* Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
-* Functions return a value of 0 if successful and -1 if not successful.
-* Functions returning -1 throw an error string that suggests the problem encountered.
-* Functions returning 0 add resulting properties to the argument object.  The resulting property names differ among functions.
+* Functions return a value of 0 if successful.
+* If an error is detected functions throw an error message that suggests the problem that was encountered.  That message along with trace can be caught in the try-catch statement.  The error and the trace information can be accessed in the stack property of the err object (e.g. console.log(err.stack)).
+* Functions returning 0 may add properties that includes the result to the argument object.  The resulting property names differ among functions.
 
-## Functions
-### getLineOfText(TC)
+[Back to Table of Contents](#Table of Contents)
+
+## Functions <a name = 'Functions' />
+### getLineOfText(TC) <a name = 'getLineOfText' />
 #### Description
 getLineOfText(TC) accepts a line of text and returns a list of paths that can be used to cut the text.  getLineOfText(TC) accepts a single argument (TC).  The properties added to TC define addributes of the resulting paths and are described in the Arguments section.  getLineOfText(TC) can accept any number of characters (including spaces and tabs), but will only process one line at at time. getLineOfText(TC) accepts any of the 23 fonts available in the HersheyText.js library.
+
+[Back to Table of Contents](#Table of Contents)
 
 ####Example
 The following code example cuts the "Hello World!" string in the "Script 1-stroke" font.  The character spacing is set to -2 to cause the script characters to move a bit closer to give the appearance that the cursive characters are connected together. The size of the resulting paths are scaled up by a factor of 5, and the size of spaces between words is 5. 
@@ -51,13 +66,13 @@ getLineOfText(TC) accepts a single argument TC, which is an object containing th
 * TC.tabInterval - TC.tabInterval is a number that specifies the interval where tabs will appear. For instance, if TC.tabInterval is set to 100, then a tab characters will cause the text of the next character to be moved ahead to the next position that is a multiple of 100.  TC.tabInterval is scaled by the amount specified in TC.scale.  TC.tabInterval is optional and if not provided will default to 20.
 
 ####Results
-getLineOfText(TC) returns 0 if no errors are detected and -1 if an error is detected.  The following properties will be set in the argument object (TC) depending on whether errors are detected:
+getLineOfText(TC) returns 0 if no errors are detected or throws and error message an error is detected.  The following properties will be set in the argument object (TC) if no errors are detected:
 * TC.paths - If no error is detected, TC.paths will contain a list of paths.  Each path within the list will be a list of point objects in the form of {X: x Y: y}.  If an error is detected, TC.paths remains unchanged.
 * TC.width - If no error is detected, TC.width will contain a number that is the overall width of the list of paths that is returned in TC.paths.
 * TC.height - If no error is detected, TC.height will contain a number that is the overall height of the list of paths that is returned in TC.paths.
 
 ####Error Messages
-If an error is detected, getLineOfText(TC) returns -1 and throws one of the following values:
+If an error is detected, getLineOfText(TC) throws one of the following values:
 * "ARGUMENT\_NOT\_PROVIDED" - Paths could not be created because the required argument object (TC) was not provided.
 * "ARGUMENT\_INVALID" - Paths could not be created because the argument that was provided was not an object.
 * "TEXT\_NOT\_PROVIDED" - Paths could not be created because the text property (TC.text) was not present in the argument object (TC).
