@@ -7,6 +7,7 @@
 |                      |[Example](#OverviewExample)                              |
 |                      |[Style](#OverviewStyle)                                  |
 |[Functions](#Functions)|                                                        |
+|                      |[reflect(path,direction)](#reflect)                           |
 |                      |[makePointsObjects(pointList)](#makePointsObjects))      |
 |                      |[bezierPoint(BEZ)](#bezierPoint)                         |
 |                      |[FourPointTensionedSpline(S)](#FourPointTensionedSpline) |
@@ -22,6 +23,8 @@
 
 ## Overview <a name = 'Overview' />
 The DrawingAids library is meant to be used with [tplang](http://tplang.org), and provides a set of commonly needed drawing tools.
+
+[Back to Table of Contents](#Table of Contents)
 ## Example <a name = 'OverviewExample' />
 This example shows how the DrawingAids Library can be used in conjunction with the CuttingAids library to create the [g-code](http:reprap.org/wiki/G-code) needed to cut out a eight-point star with rounded vertexes.
 
@@ -50,24 +53,51 @@ try {
 	da.makeStar(star);
 	cutter.cutPath(star.star,safeHeight,depth);
 } catch(err) {
-	print(err,'\n');
+	console.log(err.stack,'\n');
 };
 ```
 The resulting cuts, which were simulated in the [Camotics](http://openscam.org) simulator are shown here.
 
 <img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/8PointStar.png" height="300" width = "400">
 
+[Back to Table of Contents](#Table of Contents)
+
 ## Style <a name = 'OverviewStyle' />
-DrawingAids functions (except for makePointsObjects() ) all use a similar style, which is described as follows:
+DrawingAids functions (except for makePointsObjects(pointList) and reflect(path,direction) all use a similar style, which is described as follows:
 * Functions accept and return points in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Each function accepts a single argument which is an object.  The required properties differ among the various functions.
-* Functions return a value of 0 if successful and -1 if not successful.
-* Functions returning -1 throw an error string which suggests the problem encountered.
-* Functions returning 0 add a property that includes the result to the argument object.  The resulting property name differs among functions.
+* Functions return a value of 0 if successful.
+* If an error is detected functions throw an error message that suggests the problem that was encountered.  That message along with trace can be caught in the try-catch statement.  The error and the trace information can be accessed in the stack property of the err object (e.g. console.log(err.stack)).
+* Functions returning 0 may add properties that includes the result to the argument object.  The resulting property names differ among functions.
 
-One exception to these style rules is found in makePointsObjects(), which is a helper function that is provided to easily convert point lists in the form of [x,y] to {X: x,Y: y}.  See the description of makePointsObjects() for more information.
+Two exceptions to these style rules are found in makePointsObjects(pointList) and reflect(path,direction), which are a helper functions.  See the descriptions of makePointsObjects(pointList) and reflect(path,direction) for more information.
+
+[Back to Table of Contents](#Table of Contents)
 
 ## Functions <a name = 'Functions'/>
+### reflect(path,axis) <a name = 'reflect' />
+####Description
+reflect(path,direction) accepts path and direction as arguments and returns a new path that is reflected in the specified direction.  Reflect assures that the path direction is in the same direction as the original path.  In other words, if the path traveled in the clockwise direction,the new path will also travel in the clockwise direction.  This is important because the [Clipping Library](https://github.com/buildbotics/tpl-docs/blob/master/Clipping%20Library.md) relies on path direction in order to produce predictable results.
+
+[Back to Table of Contents](#Table of Contents)
+####Arguments
+reflect(path,direction) requires the following arguments.
+* path - This is the path that will be reflected.  It must be a list of points of the form {X: x, Y: y}.
+* direction - This is the direction in which the path will be reflected.  It must be a string and can have any of the following values:
+  * "X" or "x" - The resulting path will be reflected horizontially across the y-axis.
+  * "Y" or "y" - The resulting path will be reflected vertically the x-axis.
+  * "BOTH" or "both" - The resulting path will be reflected both horizontaly across the y-axis and vertically across the x-axis.
+
+####Result
+If an error is detected, reflect(path,direction) will throw an error message.  Otherwise, reflect will return a path that is reflected in the directions specified.  If the original path traveled clockwise, the returned path will also travel clockwise, and visa-versa.
+
+####Error Messages
+* "PATH\_NOT\_PROVIDED" - The reflection could not be created because the path argument was not provided.
+* "INVALID\_PATH" - The reflection could not be created because the path that was provided was not in the form of a list of points in the form of {X: x, Y: y}.
+* "DIRECTION\_NOT\_SPECIFIED" - The reflection could not be created because the direction to reflect was not provided.
+* "DIRECTION\_INVALID" - The reflection could not be created because the direction that was provided was not recognized.
+
+[Back to Table of Contents](#Table of Contents)
 ###makePointsObjects(pointList) <a name = 'makePointsObjects'/>
 ####Description
 Converts a list of points in the form of [x,y] found in pointList to the form of {X: x,Y: y} and returns the resulting list.
@@ -205,7 +235,7 @@ try {
 	translate(50,0,0);
 	cutter.cutPath(S.spline,safeHeight,depth);
 } catch (err) {
-	print(err,'\n');
+	console.log(err.stack,'\n');
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).  The cut on the left is the original point list while the cut on the right is the spline.
@@ -219,11 +249,11 @@ makeSpline(S) accepts a single object argument with the following properties:
 * S.grain - specifies the number of increments between each two points.  Higher numbers produce smoother curves but result in larger [g-code](http:reprap.org/wiki/G-code) files.
 
 ####Results
-makeSpline(S) returns 0 if successful and -1 if a failure is detected.
+makeSpline(S) returns 0 if successful or throws and error message if an error is detected.
 * S.spline - If no errors are detected, a list of points representing the resulting spline is placed in S.spline.
 
 ####Error Messages
-If an error is detected the following error will be trown.
+If an error is detected the following error messages will be thrown.
 * "INSUFFICIENT\_NUMBER\_OF\_POINTS"
 
 [Back to Table of Contents](#Table of Contents)
@@ -253,7 +283,7 @@ try {
 	da.polyhedron(p);
 	cutter.cutPath(p.polyhedron,safeHeight,depth);
 } catch (err) {
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -267,11 +297,11 @@ polyhedron(P) accepts a single argument.  That argument (P) is an object that co
 * P.cincs - P.cincs is only required if P.cradius is defined and greater than 0.  P.cincs specifies the number of increments that make up each rounded corner.  Large values of cincs create smoother cuts, but generate more [g-code](http:reprap.org/wiki/G-code).
 
 ####Results
-polyhedron(P) returns 0 if successful and -1 if an error is detected.  The following properties are set in the argument object (P):
+polyhedron(P) returns 0 if successful.  If and error is detected, an error is thrown.  If no error is detected, the following properties are set in the argument object (P):
 * P.polyhedron - P.polyhedron contains the list of points that make up the resulting polyhedron.  P.polyhedron will only be defined if no error is detected during execution and 0 is returned.
 
 ####Error Messages
-If an error is detected, polyhedron(P) returns -1 and throws  one of the following values:
+If an error is detected, polyhedron(P) throws  one of the following values:
 * "RADIUS\_OF\_POLYHEDRON\_NOT\_PROVIDED" - P.radius was not defined.  The radius is required to define the size of the polygon.
 * "RADIUS\_INVALID\_TYPE" - P.radius was provided, but is not a number.  A number is required to specify the radius of the polygon.
 * "COUNT\_NOT\_PROVIDED" - P.count was not defined. P.count specifies the number of sides on the polygon and is required to define the shape of the polygon.
@@ -308,7 +338,7 @@ A.start = {X:0,Y:0}, A.center = {X:0,Y:50},A.increments = 100,A.angle = Math.PI;
 try {
 	da.makeArc(A);
 	cutter.cutPath(A.arc,safeHeight,bitWidth);
-} catch (err) { print(err,'\n'); };
+} catch (err) { console.log(err.stack); };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
@@ -322,11 +352,11 @@ makeArc(A) accepts a single argument.  That argument (A) is an object that conta
 * A.angle - A.angle is the angle over which the resulting arc will be struck.  The value is given in radians.  Positive values cause the arc to be struck counter-clockwise and negative values cause the arc to be struck clockwise.
 
 ####Results
-makeArc(A) returns 0 if no errors are detected and -1 if an error is detected.  The following properties will be set in the argument object (A) depending on whether errors are detected:
+makeArc(A) returns 0 if no errors are detected and and throws an error if an error is detected.  The following properties will be set in the argument object (A) if no errors are detected:
 * A.arc - If no error is detected, A.arc contains a list of points that form the resulting arc.  The points will be in the form of {X: x, Y: y}.
 
 ####Error Messages
-If an error is detected, makeArc(A) returns -1 and throws one of the following values:
+If an error is detected, makeArc(A) throws one of the following values:
 * "STARTING\_POINT\_NOT\_DEFINED" - An arc could not be struck because the starting point is not defined.
 * "INVALID\_STARTING\_POINT" - An arc could not be struck because the starting point is not an object.
 * "CENTER\_POINT\_NOT\_DEFINED" - An arc could not be struck because the center point is not defined.
@@ -362,7 +392,7 @@ r.width = 150, r.height = 100, r.cornerRadius = 10, r.cornerIncrements = 10;
 try { 
 	da.makeRectangle(r);
 	cutter.cutPath(r.rect,safeHeight,bitWidth);
-} catch (err) { print(err,'\n'); };
+} catch (err) { console.log(err.stack); };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
 
@@ -376,11 +406,11 @@ makeRectangle(R) accepts a single argment, R.  R is an object with properties th
 * R.cornerIncrements - R.cornerIncrements must be provided if R.cornerRadius is greater than 0.  R.cornerIncrements is the number of line segments that each corner will be broken into.  It must be a number.  Larger values of R.cornerIncrements provide smoother edges but cause the resulting g-code files to be larger.
 
 ####Results
-makeRectangle(R) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, R depending on whether an error is detected.
+makeRectangle(R) will return 0 if no errors are detected or throw an error message if an error is detected.  The following properties are loaded into the argument object if no error is detected.
 * R.rect - R.rect is a list of points in the form of {X: x, Y: y} that form the desired rectangle.  R.rect will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, R.rect will be loaded with the resulting rectangle.
 
 ####Error Messages
-If an error is detected, makeRectangle(R) returns -1 and throws one of the following values:
+If an error is detected, makeRectangle(R) throws one of the following values:
 * "HEIGHT\_NOT\_DEFINED" - A rectangle could not be formed because the height was not provided.
 * "INVALID\_HEIGHT" - A rectangle could not be formed because the height was provided but was not a number.
 * "WIDTH\_NOT\_DEFINED" - A rectangle could not be formed because the width was not provided.
@@ -422,7 +452,7 @@ try {
 	da.makeStar(star);
 	cutter.cutPath(star.star,safeHeight,depth);
 } catch(err) {
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -440,11 +470,11 @@ makeStar(S) accepts a single argument, S.  S is an object with properties that d
 * S.innerVertexIncrements - S.innerVertexIncrements is only required if S.radiusOfInnerVertexes is greater than 0.  It is a number that specifies the number of line segments that the rounded inner vertexes will be broken into.  Larger values of S.innerVertexIncrements result in smoother cuts, but also generate larger [g-code](http:reprap.org/wiki/G-code) files.
 
 ####Results
-makeStar(S) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, S depending on whether an error is detected.
+makeStar(S) will return 0 if no errors or throw an error message if an error is detected.  The following properties are loaded into the argument object, S if no error is detected.
 * S.star - S.star is a list of points in the form of {X: x, Y: y} that form the desired star.  S.star will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, S.star will be loaded with the resulting star.
 
 ####Error Messages
-If an error is detected, makeStar(S) returns -1 and throws one of the following values:
+If an error is detected, makeStar(S) throws one of the following values:
 * "STAR\_OBJECT\_ARG\_NOT\_DEFINED" - A star could not be created because no argument was provided.
 * "STAR\_INVALID\_TYPE" - A star could not be created because an argument was provided but it was not an object.
 * "OUTER\_RADIUS\_ARGUMENT\_NOT\_PROVIDED" - A star could not be created because the outer radius was not provided.
@@ -493,7 +523,7 @@ try {
 	da.makeEllipse(E);
 	cutter.cutPath(E.ellipse,safeHeight,depth);
 } catch (err) {
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -507,7 +537,7 @@ makeEllipse(E) accepts a single argument, E.  E is an object with properties tha
 * E.increments - E.increments is a number that specifies the number of line segments that will make up the desired ellipse.  Larger values for E.increments will create smoother cuts, but will generate larger [g-code](http:reprap.org/wiki/G-code) files.
 
 ####Results
-makeEllipse(E) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, E depending on whether an error is detected.
+makeEllipse(E) will return 0 if no errors or throw an error message if an error is detected.  The following properties are loaded into the argument object, E if no error is detected.
 * E.ellipse - E.ellipse is a list of points in the form of {X: x, Y: y} that form the desired ellipse.  E.ellipse will remain unchanged (undefined if it hasn't been proviously set) if an error is detected.  If no error is detected, E.ellipse will be loaded with the resulting ellipse.
 
 ####Error Messages
@@ -552,7 +582,7 @@ try {
 	da.moveBy(M);
 	cutter.cutPath(M.newPaths[0],safeHeight,depth);
 } catch (err) { 
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -566,7 +596,7 @@ moveBy(M) accepts a single argument, M.  M is an object with properties that inc
 * M.y - M.y is an optional argument and is a number that specifies the number of points to move along the y axis.  If M.y is not defined, it is assumed to be 0;
 
 ####Results
-moveBy(M) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, M depending on whether an error is detected.
+moveBy(M) will return 0 if no errors or throw an error message if an error is detected.  The following properties are loaded into the argument object, M if no error is detected.
 * M.newPaths - If no errors are detected, M.newPaths will contain a list of paths identical to M.paths except moved by x points along the x axis and y  points along the y axis.  M.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
 
 ####Error Messages
@@ -583,10 +613,11 @@ If an error is detected, moveBy(M) will throw one of the following error message
 ####Description
 turnBy(T) turns a list of paths by a specified angle around a specified point. It accepts a single argument, which is an object containing the list of paths (T.paths) to be rotated around a specified turning point (T.tp) by a specified angle (T.angle)  .The resulting list of paths will be identical to the original list of paths except it will have been rotated around the specified point by the specified angle.
 
+[Back to Table of Contents](#Table of Contents)
 ####Example
 The following code creates a four-point polyhedron with rounded corners around the origin {X: 0, Y: 0} and cuts it.  It then moves the polyhedron up the y axis by 200 points and cuts it again. Finally, it turns the shape around the origin ({X: 0, Y: 0} by pi/4 radians and makes the third cut.
 
-[Back to Table of Contents](#Table of Contents)
+
 ```
 units(METRIC); // units are in inches
 feed(30); // feed rate us 30 inches per minute
@@ -616,7 +647,7 @@ try {
 	da.turnBy(turnedShape);
 	cutter.cutPath(turnedShape.newPaths[0],safeHeight,depth);
 } catch (err) {
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -630,7 +661,7 @@ turnBy(T) accepts a single argument, T.  T is an object with properties that inc
 * T.angle - T.angle is the angle over which the paths will be turned.  T.angle must be a number and its value is in radians.  Positive values of T.angle cause T.paths to turn counter-clockwise around T.tp.
 
 ####Results
-turnBy(T) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, T depending on whether an error is detected.
+turnBy(T) will return 0 if no errors or throw an error message if an error is detected.  The following properties are loaded into the argument object, T if no error is detected.
 * T.newPaths - If no errors are detected, T.newPaths will contain a list of paths identical to T.paths except turned by T.angle around the pivot point T.tp.  T.newPaths will be a list of paths and each path within the list will be a list of points in the form {X: x, Y: y}.
 
 ####Error Messages
@@ -696,7 +727,7 @@ try {
 		};
 	};
 } catch (err) {
-	print(err,'\n');
+	console.log(err.stack);
 };
 ```
 The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
@@ -719,11 +750,11 @@ drawAlong(DA) accepts a single argument, DA.  DA is an object with properties th
 * DA.pathToDrawAlong - DA.pathToDrawAlong is a list of points in the form of {X: x, Y: y} and is the path upon which the things in DA.thingsToDraw will be drawn along.  DA.pathToDrawAlong is optional, and if not provided will be assumed to be a horizontal line that starts at the origin {X: 0,Y: 0} and is the same length as the length of DA.thingsToDraw with zooming and spaces applied.
 
 ####Results
-drawAlong(DA) will return 0 if no errors are detected and -1 if an error is detected.  The following properties are loaded into the argument object, DA depending on whether an error is detected.
+drawAlong(DA) will return 0 if no errors are detected or throw an error message if an error is detected.  The following properties are loaded into the argument object, DA if no error is detected.
 * DA.newThings - If successful, drawAlong(DA) will return 0 and set DA.newThings to the list of things that result from executing drawAlong(DA).  DA.newThings will be similar, and in the same form as the DA.thingsToDraw.  If will differ by having the things drawn along DA.pathToDrawAlong and oriented, zoomed, and repeated as specified in the other controls provided in the DA object.
  
 ####Error Messages
-If drawAlong(DA) detects and error it will return -1 and throw one of the following error messages:
+If drawAlong(DA) detects an error, it will throw one of the following error messages:
 * "NO\_ARGUMENT" - drawAlong(DA) could not run because no argument (DA) was provided.
 * "INVALID\_ARGUMENT" - drawAlong(DA) could not run because the argument that was provided was not an object.	
 * "THINGS\_TO\_DRAW\_NOT\_DEFINED" - drawAlong(DA) could not be exectuted because the DA.thingsToDraw property was not provided.
