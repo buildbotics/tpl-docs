@@ -1,5 +1,7 @@
 #API
 ##FontCommands
+The font commands provide the ability to cut text in a multitude of fonts.
+
 ###addFontDir(path)
 Adds a path to a directory or folder that contains font files. When issued, this command will look at all files in the named folder and all subfolders and determine whether the file contains a font that is compatible. The following types of fonts are known to be compatible:
 * LibreCAD font files ending with a .lff file extension. Note, a few of the LibreCAD font files are not compatible because they do not contain character fields that are used to look up the character to be used in the font, but rather use four-hex-digit unicode values. Most LibreCAD fonts are single line fonts and there are a few outline fonts.
