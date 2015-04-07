@@ -48,7 +48,7 @@ The following image shows the [Camotics](http://openscam.org) simulation of the 
 [Back to Table of Contents](#Table of Contents)
 
 ## Style <a name = 'OverviewStyle' />
-The Text Librart style is described as follows:
+The Text Library style is described as follows:
 * When cutting paths are returned, the points are in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
 * Functions requiring multiple arguments receive those arguments as properties in a single object.  The results are added as properties to that same object.
 * Functions return a value of 0 if successful.
@@ -60,7 +60,7 @@ The Text Librart style is described as follows:
 ## Functions <a name = 'Functions' />
 ### AddFontFolder(path) <a name = 'AddFontFolder' />
 #### Description
-AddFontFolder provides a path to a folder where fonts are contained.  Upon receiving a path to a folder, AddFontFolder searches that folder and all subfolders for files containing fonts that are readible by GetTextPaths.  Each readable file is added to the list of known fonts and becomes available for use.
+AddFontFolder provides a path to a folder where fonts are contained.  Upon receiving a path to a folder, AddFontFolder searches that folder and all subfolders for files containing fonts that are readable by GetTextPaths.  Each readable file is added to the list of known fonts and becomes available for use.
 
 ####Example
 The following example adds all fonts in the /usr/share/librecad/fonts folder.
