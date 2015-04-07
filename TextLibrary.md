@@ -97,7 +97,7 @@ for (var i = 0; i < fonts.length; i++) {
 ####Results
 ListAvailableFonts() returns an array of objects.  Each object in the array is of the form { type: type, name: name }.  The type property contains the file extension (e.g. ttf, lff, pfb).  The name property contains the name of the property that was gleaned from the font file.
 
-###UseFont(F) <a name = #UseFont />
+###UseFont(F) <a name = 'UseFont' />
 ####Description
 UseFont(F) accepts a single object argument, whose properties describe the font to be used in subsequent calls to GetTextPaths(T).  The Object members are:
 * F.fontName - fontName is a string containing the name of the font to be used.  It must be a name of a font that has been previously discovered through AddFontFolders.  Valid font names can be found by using the ListAvailableFonts function.
@@ -137,7 +137,7 @@ If an error is discovered, one of the following error messages will be thrown:
 * UseFont: Invalid word spacing - The word spacing that was provided was not a number.
 * UseFont: Invalid line spacing - The line spacing that was provided was not a number.
 
-###GetTextPaths(T) <a name = #GetTextPaths />
+###GetTextPaths(T) <a name = 'GetTextPaths' />
 ####Description
 GetTextPaths(T) accepts a single argument T that contains a text string and a cursor position and returns the paths required to cut the text at that cursor location.  GetTextPaths can accept strings ranging from a single character to multiple lines.  GetTextPaths uses the properties specified in the most recent UseFont(F) command to determine the font, character size, line spacing, word spacing and character spacing.
 
