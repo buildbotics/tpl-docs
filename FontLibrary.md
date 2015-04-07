@@ -38,3 +38,5 @@ for (var i = 0; i < paths.length; i++) {
   cutter.cutPath(P);
 }
 ```
+The following image shows the [Camotics](http://openscam.org) simulation of the resulting [g-code](http:reprap.org/wiki/G-code).
+<img src = "https://github.com/buildbotics/tpl-docs/blob/master/images/FontLibraryExample.png" height="300" width = "400">
