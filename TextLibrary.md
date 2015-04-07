@@ -10,7 +10,7 @@
 |                      |[AddFontFolder(path)](#AddFontFolder)                    |
 |                      |[ListAvailableFonts()](#ListAvailableFonts)              |
 |                      |[UseFont(F)](#UseFont)                    |
-|                      |[GetTextPaths](#GetTextPaths)                    |
+|                      |[GetTextPaths(T)](#GetTextPaths)                    |
 
 ## Overview <a name = 'Overview' />
 
