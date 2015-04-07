@@ -1,4 +1,4 @@
-#Font Library
+#Text Library
 
 ## Table of Contents <a name = 'Table of Contents' />
 
@@ -9,16 +9,16 @@
 |[Functions](#Functions)|                                                        |
 |                      |[AddFontFolder(path)](#AddFontFolder)                    |
 |                      |[ListAvailableFonts()](#ListAvailableFonts)              |
-|                      |[addFontFolder(path)](#addFontFolder)                    |
-|                      |[addFontFolder(path)](#addFontFolder)                    |
+|                      |[UseFont(F)](#UseFont)                    |
+|                      |[GetTextPaths](#GetTextPaths)                    |
 
 ## Overview <a name = 'Overview' />
 
-The font library provides simple access to a vast number of fonts.  It is able to read any scalable fonts that are accessible through the [FreeType2](http://www.freetype.org/) API.  In addition, it can read most of the fonts provided with the [LibreCAD](http://librecad.org/cms/home.html) 2D Computer Aided Design software.
+The Text Library provides simple access to a vast number of fonts.  It is able to read any scalable fonts that are accessible through the [FreeType2](http://www.freetype.org/) API.  In addition, it can read most of the fonts provided with the [LibreCAD](http://librecad.org/cms/home.html) 2D Computer Aided Design software.
 
-The font library provides a wrapper around the [TPL](http://www.tplang.org) addFontDir(), listFonts(), and getCharCut() commands and simplifies their use.
+The Text Library provides a wrapper around the [TPL](http://www.tplang.org) addFontDir(), listFonts(), and getCharCut() commands and simplifies their use.
 
-The following example shows a simple example of how the Font Library is used.
+The following example demonstrates how the Text Library is used.
 ```
 var f = require("TextLibrary");
 var clip = require("ClipperAids");
@@ -48,12 +48,12 @@ The following image shows the [Camotics](http://openscam.org) simulation of the 
 [Back to Table of Contents](#Table of Contents)
 
 ## Style <a name = 'OverviewStyle' />
-The text library style is described as follows:
+The Text Librart style is described as follows:
 * When cutting paths are returned, the points are in object form.  For instance a point at x = 1 and y = 2 would be given as {X: 1, Y: 2}.
-* Functions requiring multiple arguments receive those arguments as properties in a single object.  The results of added as properties to that same object.
+* Functions requiring multiple arguments receive those arguments as properties in a single object.  The results are added as properties to that same object.
 * Functions return a value of 0 if successful.
-* If an error is detected functions throw an error message that suggests the problem that was encountered.  That message along with trace can be caught in the try-catch statement.  The error and the trace information can be accessed in the stack property of the err object (e.g. console.log(err.stack)).
-* Functions returning 0 may add properties that includes the result to the argument object.  The resulting property names differ among functions.
+* If an error is detected functions throw an error message that suggests the problem that was encountered.  That message can be caught in the try-catch statement.  The error and the trace information can be accessed in the stack property of the err object (e.g. console.log(err.stack)).
+* Functions returning 0 may add properties that include the result to the argument object.  The resulting property names differ among functions.
 
 [Back to Table of Contents](#Table of Contents)
 
@@ -99,7 +99,7 @@ ListAvailableFonts() returns an array of objects.  Each object in the array is o
 
 ###UseFont(F) <a name = #UseFont />
 ####Description
-UseFont(F) accepts a single object argument, whose propertys describe the font to be used in subsequent calls to GetTextPaths(T).  The Object members are:
+UseFont(F) accepts a single object argument, whose properties describe the font to be used in subsequent calls to GetTextPaths(T).  The Object members are:
 * F.fontName - fontName is a string containing the name of the font to be used.  It must be a name of a font that has been previously discovered through AddFontFolders.  Valid font names can be found by using the ListAvailableFonts function.
 * F.units - F.units is a string that specifies whether inches or millimeters will be used when scaling the font size.  It can contain one of the following four strings: "inches", "\"", "millimeters", or "mm".  The default value is "inches".
 * F.height - F.height is a number that specifies the approximate height desired for the resulting fonts.  If units are in "inches", the default value is 1.  If the units are "mm", the default value is 25.4.
@@ -121,7 +121,7 @@ f.UseFont(F1);
 This code specifies that text returned by GetTextPaths will use the "Dejavu Serif Condensed Italic" font, the characters will be 3 inches high and each character will be seperated by 3 inches.  Additionally, words will be separated by 7 inches and lines will be 20 inches apart.
 
 ####Results
-If not errors are encountered, UseFont(F) simply returns 0.
+If no errors are encountered, UseFont(F) simply returns 0.
 
 ####Error Messages
 If an error is discovered, one of the following error messages will be thrown:
@@ -137,5 +137,38 @@ If an error is discovered, one of the following error messages will be thrown:
 * UseFont: Invalid word spacing - The word spacing that was provided was not a number.
 * UseFont: Invalid line spacing - The line spacing that was provided was not a number.
 
-###GetTextPaths(T)
+###GetTextPaths(T) <a name = #GetTextPaths />
 ####Description
+GetTextPaths(T) accepts a single argument T that contains a text string and a cursor position and returns the paths required to cut the text at that cursor location.  GetTextPaths can accept strings ranging from a single character to multiple lines.  GetTextPaths uses the properties specified in the most recent UseFont(F) command to determine the font, character size, line spacing, word spacing and character spacing.
+
+####Examples
+These examples assume that the UseFont(F) command was previously called and the Text Library has been loaded into f using the require command.
+
+The following example shows how to use GetTextPaths(T) for a single character, 'R' at position {X: 0, Y: 0}..
+```
+var T = { text: "R", cursor: {X: 0, Y: 0}};
+f.GetTextPaths(T);
+```
+
+The next example shows how to use GetTextPaths(T) for multiple lines of text.
+```
+var text = "Hello World!\n\
+Goodbye World!";
+var T = {text: text, cursor: {X: 0, Y: 0}};
+f.GetTextPaths(T);
+```
+
+####Results
+If no errors are encountered GetTextPaths will return a list of paths representing the T.text with cursor position starting in the lower left corner of the first character of the first line of text.  The paths will be in the format specified in the most recent call to UseFont(F).
+
+Each path in the list will be in the form of a list of points with each point being of the form {X: x, Y: y}.
+
+####Error Messages
+If an error is encountered, one of the following error messages will thrown:
+* GetTextPaths: argument not provided - No argument was provided.
+* GetTextPaths: invalid argument - The argument that was provided was not an object.
+* GetTextPaths: no text was provided - The text string was not included in the argument object.
+* GetTextPaths: text provided is not a character or string - The value that was provided in the text member was not a characther or a string.
+* GetTextPaths: Invalid starting point - The cursor property that was provided was not valid.
+* GetTextPaths: Font is not defined - No font was defined before calling GetTextPaths(T).
+
