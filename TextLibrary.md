@@ -29,10 +29,10 @@ units(IMPERIAL);
 f.AddFontFolder("/usr/share/fonts");
 
 var F1 = {fontName: "DejaVu Serif Condensed Italic", units: "inches", height: 3,
-          characterSpacing: 3, wordSpacing: 7, lineSpacing: 20};
+          characterSpacing: 3, wordSpacing: 7};
 f.UseFont(F1);
 
-var T = {text: "Hello World!", cursor: {X: 0, Y: 0}}
+var T = {text: "Hello World!"}
 f.GetTextPaths(T);
 
 var P = {safeHeight: .125, depth: .125}
@@ -106,9 +106,10 @@ UseFont(F) accepts a single object argument, whose properties describe the font 
 * F.fontName - fontName is a string containing the name of the font to be used.  It must be a name of a font that has been previously discovered through AddFontFolders.  Valid font names can be found by using the ListAvailableFonts function.
 * F.units - F.units is a string that specifies whether inches or millimeters will be used when scaling the font size.  It can contain one of the following four strings: "inches", "\"", "millimeters", or "mm".  The default value is "inches".
 * F.height - F.height is a number that specifies the approximate height desired for the resulting fonts.  If units are in "inches", the default value is 1.  If the units are "mm", the default value is 25.4.
-* F.characterSpacing - F.characherSpacing is a number that specifies the distance between characters.  Its value is assumed to be in the units specified in F.units and its default value is .5 * F.height.
-* F.wordSpacing - F.wordSpacing is a number that specifies the distance between words.  Its value is assumed to be in the units specified in F.units and its default value is equal to F.height.
-* F.lineSpacing - F.lineSpacing is a number that specifies the distance between lines. Its value is assumed to be in the units specified in F.units and its default value is equal to F.height.
+* F.characterSpacing - F.characherSpacing is a number that specifies the distance between characters.  Its value is assumed to be in the units specified in F.units and its default value is F.height / 3.
+* F.wordSpacing - F.wordSpacing is a number that specifies the distance between words.  Its value is assumed to be in the units specified in F.units and its default value is equal to .75 * F.height.
+* F.lineSpacingFactor - F.lineSpacingFactor is a number that specifies the distance between lines. It's value is multiplied by the F.height to determine the actual line spacing.  It's default value is .67.
+* F.justify - F.justify specifies whether the text will be "LEFT", "CENTER", or "RIGHT" justified.  It is only relevant for multi-line text.  It's default value is "LEFT".
 
 ####Example
 The following code is an example of using UseFont(F);
@@ -118,10 +119,10 @@ units(IMPERIAL);
 
 f.AddFontFolder("/usr/share/fonts");
 var F1 = {fontName: "DejaVu Serif Condensed Italic", units: "inches", height: 3,
-          characterSpacing: 3, wordSpacing: 7, lineSpacing: 20};
+          characterSpacing: 3, wordSpacing: 7, lineSpacing: 2};
 f.UseFont(F1);
 ```
-This code specifies that text returned by GetTextPaths will use the "Dejavu Serif Condensed Italic" font, the characters will be 3 inches high and each character will be seperated by 3 inches.  Additionally, words will be separated by 7 inches and lines will be 20 inches apart.
+This code specifies that text returned by GetTextPaths will use the "Dejavu Serif Condensed Italic" font, the characters will be 3 inches high and each character will be seperated by 3 inches.  Additionally, words will be separated by 7 inches and lines will be 6 inches apart.
 
 ####Results
 If no errors are encountered, UseFont(F) simply returns 0.
@@ -138,20 +139,21 @@ If an error is discovered, one of the following error messages will be thrown:
 * UseFont: character height must be greater than zero" - The height specified was less than or equal to zero.
 * UseFont: Invalid character spacing - The character spacing that was provided was not a number.
 * UseFont: Invalid word spacing - The word spacing that was provided was not a number.
-* UseFont: Invalid line spacing - The line spacing that was provided was not a number.
+* UseFont: Invalid line spacing - The line spacing factor that was provided was not a number.
+* UseFont: justify string not recognized - The value string provided for justify was not "LEFT", "CENTER", or "RIGHT".
 
 [Back to Table of Contents](#Table of Contents)
 
 ###GetTextPaths(T) <a name = 'GetTextPaths' />
 ####Description
-GetTextPaths(T) accepts a single argument T that contains a text string and a cursor position and returns the paths required to cut the text at that cursor location.  GetTextPaths can accept strings ranging from a single character to multiple lines.  GetTextPaths uses the properties specified in the most recent UseFont(F) command to determine the font, character size, line spacing, word spacing and character spacing.
+GetTextPaths(T) accepts a single argument T that contains a text string and returns the paths required to cut the text.  GetTextPaths can accept strings ranging from a single character to multiple lines.  GetTextPaths uses the properties specified in the most recent UseFont(F) command to determine the font, character size, line spacing, word spacing and character spacing.  
 
 ####Examples
 These examples assume that the UseFont(F) command was previously called and the Text Library has been loaded into f using the require command.
 
-The following example shows how to use GetTextPaths(T) for a single character, 'R' at position {X: 0, Y: 0}..
+The following example shows how to use GetTextPaths(T) for a single character, 'R'.
 ```
-var T = { text: "R", cursor: {X: 0, Y: 0}};
+var T = { text: "R"};
 f.GetTextPaths(T);
 ```
 
@@ -159,12 +161,12 @@ The next example shows how to use GetTextPaths(T) for multiple lines of text.
 ```
 var text = "Hello World!\n\
 Goodbye World!";
-var T = {text: text, cursor: {X: 0, Y: 0}};
+var T = {text: text};
 f.GetTextPaths(T);
 ```
 
 ####Results
-If no errors are encountered GetTextPaths will return a list of paths representing the T.text with cursor position starting in the lower left corner of the first character of the first line of text.  The paths will be in the format specified in the most recent call to UseFont(F).
+If no errors are encountered GetTextPaths will return a list of paths representing the T.text.  The text will be positioned such that the left edge of the text will be at X=0 and the bottom of non-descending characters in the top line will be located at Y = 0.  The paths will be in the format specified in the most recent call to UseFont(F).
 
 Each path in the list will be in the form of a list of points with each point being of the form {X: x, Y: y}.
 
@@ -173,8 +175,7 @@ If an error is encountered, one of the following error messages will thrown:
 * GetTextPaths: argument not provided - No argument was provided.
 * GetTextPaths: invalid argument - The argument that was provided was not an object.
 * GetTextPaths: no text was provided - The text string was not included in the argument object.
-* GetTextPaths: text provided is not a character or string - The value that was provided in the text member was not a characther or a string.
-* GetTextPaths: Invalid starting point - The cursor property that was provided was not valid.
+* GetTextPaths: text provided is not a character or string - The value that was provided in the text member was not a character or a string.
 * GetTextPaths: Font is not defined - No font was defined before calling GetTextPaths(T).
 
 [Back to Table of Contents](#Table of Contents)
